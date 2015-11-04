@@ -1,0 +1,39 @@
+<div class="max-full edit-trip">
+	<div class="row-fluid">
+		<portlet:actionURL name="updateTrip" var="updateTripURL">
+			<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+		</portlet:actionURL>
+
+		Trip Id: <%= trip.getTripId() %>
+
+		<form action="<%= updateTripURL %>" method="post">
+
+			<aui:model-context bean="<%= trip %>" model="<%= Trip.class %>" />
+
+			<aui:input name="tripId" type="hidden" />
+
+			<aui:input name="tripTitle" />
+			<aui:input name="tripImage" />
+			<aui:input name="tripDescription" />
+			<aui:input name="tripFriendlyUrl" />
+			<aui:input name="tripCostEstimate" />
+			<aui:input name="tripStart" />
+			<aui:input name="tripEnd" />
+			<aui:input name="tripLocation" />
+			<aui:input name="tripCapacity" />
+
+			<aui:input name="displayTripAnnouncements" />
+			<aui:input name="displayTripCountdown" />
+			<aui:input name="displayTripDiscussion" />
+			<aui:input name="displayTripExpenses" />
+			<aui:input name="displayTripGear" />
+			<aui:input name="displayTripGearLending" />
+			<aui:input name="displayTripGroupGear" />
+			<aui:input name="displayTripMap" />
+			<aui:input name="displayTripTransportation" />
+			<aui:input name="displayTripWeather" />
+
+			<aui:button type="submit" value="Submit" />
+		</form>
+	</div>
+</div>
