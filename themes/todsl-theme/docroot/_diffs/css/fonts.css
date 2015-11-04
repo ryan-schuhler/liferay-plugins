@@ -1,0 +1,21 @@
+@font-face {
+	font-family: 'TikalSans';
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/TikalSans-Medium-webfont.ttf')  format('truetype'),
+		url('../fonts/TikalSans-Medium-webfont.svg') format('svg');
+}
+
+@font-face {
+	font-family: 'TikalSans';
+	font-style: italic;
+	font-weight: normal;
+	src: url('../fonts/TikalSans-MediumItalic-webfont.ttf')  format('truetype');
+}
+
+@font-face {
+	font-family: 'Blackjar';
+	font-style: normal;
+	font-weight: normal;
+	src: url('../fonts/Blackjar.ttf')  format('truetype');
+}
