@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+#parse ($init)
+
+<html class="$root_css_class" dir="#language ("lang.dir")" lang="$w3c_language_id">
+
+<head>
+	<title>$the_title - $company_name</title>
+
+	<meta content="initial-scale=1.0, width=device-width" name="viewport" />
+
+	$theme.include($top_head_include)
+</head>
+
+<body class="$css_class">
+
+<a href="#main-content" id="skip-to-content">#language ("skip-to-content")</a>
+
+$theme.include($body_top_include)
+
+#if ($is_signed_in)
+	#dockbar()
+#end
+
+<div class="container-fluid" id="wrapper">
+	<header class="clearfix" id="banner" role="banner">
+		<div id="heading">
+			<h2 class="site-title">
+				<a class="$logo_css_class" href="$site_default_url" title="#language_format ("go-to-x", [$site_name])">
+					<img alt="$logo_description" height="$site_logo_height" src="$site_logo" width="$site_logo_width" />
+
+					#if ($show_site_name)
+						<span class="cursive site-name" title="#language_format ("go-to-x", [$site_name])">
+							$site_name
+						</span>
+					#end
+				</a>
+			</h2>
+		</div>
+
+		#if ($has_navigation || $is_signed_in)
+			#parse ("$full_templates_path/navigation.vm")
+		#end
+	</header>
+
+	<div id="content">
+		#if ($selectable)
+			$theme.include($content_include)
+		#else
+			$portletDisplay.recycle()
+
+			$portletDisplay.setTitle($the_title)
+
+			$theme.wrapPortlet("portlet.vm", $content_include)
+		#end
+	</div>
+
+	<footer id="footer" role="contentinfo">
+		<div class="clearfix footer-content max-full">
+			<ul class="social-nav">
+				<li class="instagram">
+					<a href="//instagram.com/theoutdoors.life/" target="_blank">
+						<i alt="Instagram" class="icon-instagram"></i>
+					</a>
+				</li>
+				<li class="facebook">
+					<a href="//www.facebook.com/theoutdoorslife" target="_blank">
+						<i alt="Facebook" class="icon-facebook-sign"></i>
+					</a>
+				</li>
+				<li class="youtube hide">
+					<a href="//www.youtube.com/channel/UCbFUG9lxvUoYukvXBqpGeaw/feed" target="_blank">
+						<i alt="YouTube" class=" icon-youtube-sign"></i>
+					</a>
+				</li>
+				<li class="twitter">
+					<a href="//twitter.com/theoutdoor_life" target="_blank">
+						<i alt="Twitter" class="icon-twitter-sign"></i>
+					</a>
+				</li>
+				<li class="pinterest hide">
+					<a href="//www.pinterest.com/todsl/" target="_blank">
+						<i alt="Pinterest" class="icon-pinterest-sign"></i>
+					</a>
+				</li>
+				<li class="flickr hide">
+					<a href="" target="_blank">
+						<i alt="Flickr" class="icon-flickr-sign"></i>
+					</a>
+				</li>
+				<li class="google-plus hide">
+					<a href="//plus.google.com/u/2/114645723425822927325/posts" target="_blank">
+						<i alt="Google+" class="icon-google-plus-sign"></i>
+					</a>
+				</li>
+			</ul>
+
+			<ul class="secondary-nav">
+			</ul>
+
+			<div class="powered-by">
+				Hand crafted in Los Angeles using <a href="http://www.liferay.com" rel="external">Liferay</a>.
+			</div>
+		</div>
+	</footer>
+</div>
+
+$theme.include($body_bottom_include)
+
+$theme.include($bottom_include)
+
+</body>
+
+</html>
