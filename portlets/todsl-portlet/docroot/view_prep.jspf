@@ -1,0 +1,223 @@
+<div class="max-full trip-prep">
+	<c:if test="<%= trip.getDisplayTripAnnouncements() %>">
+		<div id="announcements">
+			<h3>Announcements</h3>
+
+			<liferay-portlet:runtime portletName="84" />
+		</div>
+	</c:if>
+
+	<div class="row-fluid">
+		<c:if test="<%= trip.getDisplayTripGear() %>">
+			<div class="span4">
+				<h3>Gear to Pack</h3>
+
+				<%
+				for (TripGearItem tripGearItem : TripGearItemLocalServiceUtil.getTripGearItems(tripId)) {
+
+					long tripGearItemId = tripGearItem.getTripGearItemId();
+				%>
+
+					<portlet:actionURL name="deleteTripGearItem" var="deleteTripGearItemURL">
+						<portlet:param name="tripGearItemId" value="<%= String.valueOf(tripGearItemId) %>" />
+					</portlet:actionURL>
+
+					<div>
+						<span><%= tripGearItem.getItemTitle() %></span>
+
+						<a href="<%= deleteTripGearItemURL %>">Delete</a>
+					</div>
+
+				<%
+				}
+				%>
+
+				<portlet:actionURL name="addTripGearItem" var="addTripGearItemURL">
+				</portlet:actionURL>
+
+				<form action="<%= addTripGearItemURL %>" method="post">
+					<aui:model-context model="<%= TripGearItem.class %>" />
+					<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+					<aui:input label="" name="itemTitle" />
+					<aui:button type="submit" value="Add Item" />
+				</form>
+			</div>
+		</c:if>
+
+		<c:if test="<%= trip.getDisplayTripGearLending() %>">
+			<div class="span4">
+				<h3>Gear Lending</h3>
+
+				<%
+				for (TripGearLendingItem tripGearLendingItem : TripGearLendingItemLocalServiceUtil.getTripGearLendingItems(tripId)) {
+
+					long borrowerId = tripGearLendingItem.getBorrowerUserId();
+					User borrower = null;
+
+					if (borrowerId != 0) {
+						borrower = UserLocalServiceUtil.getUserById(borrowerId);
+					}
+
+					long tripGearLendingItemId = tripGearLendingItem.getTripGearLendingItemId();
+				%>
+
+					<portlet:actionURL name="claimTripGearLendingItem" var="claimTripGearLendingItemURL">
+						<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
+					</portlet:actionURL>
+
+					<portlet:actionURL name="deleteTripGearLendingItem" var="deleteTripGearLendingItemURL">
+						<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
+					</portlet:actionURL>
+
+					<portlet:actionURL name="unclaimTripGearLendingItem" var="unclaimTripGearLendingItemURL">
+						<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
+					</portlet:actionURL>
+
+					<div>
+						<span><%= tripGearLendingItem.getItemTitle() %></span>
+
+						<c:choose>
+							<c:when test="<%= Validator.isNotNull(borrower) %>">
+								<span><%= borrower.getFullName() %></span>
+								<a href="<%= unclaimTripGearLendingItemURL %>">Unclaim</a>
+							</c:when>
+							<c:otherwise>
+								<a href="<%= claimTripGearLendingItemURL %>">Claim</a>
+							</c:otherwise>
+						</c:choose>
+
+						<a href="<%= deleteTripGearLendingItemURL %>">Delete</a>
+					</div>
+
+				<%
+				}
+				%>
+
+				<portlet:actionURL name="addTripGearLendingItem" var="addTripGearLendingItemURL">
+				</portlet:actionURL>
+
+				<form action="<%= addTripGearLendingItemURL %>" method="post">
+					<aui:model-context model="<%= TripGearLendingItem.class %>" />
+					<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+					<aui:input label="" name="itemTitle" />
+					<aui:button type="submit" value="Add Item" />
+				</form>
+			</div>
+		</c:if>
+	</div>
+	<div class="row-fluid">
+		<c:if test="<%= trip.getDisplayTripExpenses() %>">
+			<div class="span4">
+				<h3>Cost</h3>
+
+				<%
+				for (TripExpense tripExpense : TripExpenseLocalServiceUtil.getTripExpenses(tripId)) {
+
+					long expensePayeeId = tripExpense.getExpensePayeeUserId();
+					User expensePayee = null;
+
+					if (expensePayeeId != 0) {
+						expensePayee = UserLocalServiceUtil.getUserById(expensePayeeId);
+					}
+
+					long tripExpenseId = tripExpense.getTripExpenseId();
+				%>
+
+					<portlet:actionURL name="deleteTripExpense" var="deleteTripExpenseURL">
+						<portlet:param name="tripExpenseId" value="<%= String.valueOf(tripExpenseId) %>" />
+					</portlet:actionURL>
+
+					<div>
+						<span><%= tripExpense.getExpenseTitle() %></span>
+
+						<a href="<%= deleteTripExpenseURL %>">Delete</a>
+					</div>
+
+				<%
+				}
+				%>
+
+				<portlet:actionURL name="addTripExpense" var="addTripExpenseURL">
+				</portlet:actionURL>
+
+				<form action="<%= addTripExpenseURL %>" method="post">
+					<aui:model-context model="<%= TripExpense.class %>" />
+					<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+					<aui:input label="" name="expenseTitle" />
+					<aui:button type="submit" value="Add Expense" />
+				</form>
+			</div>
+		</c:if>
+
+		<c:if test="<%= trip.getDisplayTripQuestions() %>">
+			<div class="span4">
+				<h3>Ask the trip host</h3>
+			</div>
+
+			<div class="span4">
+				<h3>Poll</h3>
+			</div>
+		</c:if>
+	</div>
+
+	<c:if test="<%= trip.getDisplayTripTransportation() %>">
+		<div>
+			<h3>Ride Sharing</h3>
+
+			<%
+			for (TripTransportation tripTransportation : TripTransportationLocalServiceUtil.getTripTransportations(tripId)) {
+
+				long driverId = tripTransportation.getDriverUserId();
+				User driver = null;
+
+				if (driverId != 0) {
+					driver = UserLocalServiceUtil.getUserById(driverId);
+				}
+
+				long tripTransportationId = tripTransportation.getTripTransportationId();
+			%>
+
+				<portlet:actionURL name="claimTripTransportation" var="claimTripTransportationURL">
+					<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
+				</portlet:actionURL>
+
+				<portlet:actionURL name="deleteTripTransportation" var="deleteTripTransportationURL">
+					<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
+				</portlet:actionURL>
+
+				<portlet:actionURL name="unclaimTripTransportation" var="unclaimTripTransportationURL">
+					<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
+				</portlet:actionURL>
+
+				<div>
+					<span><%= tripTransportation.getSeats() %></span>
+
+					<c:choose>
+						<c:when test="<%= Validator.isNotNull(driver) %>">
+							<span><%= driver.getFullName() %></span>
+							<a href="<%= unclaimTripTransportationURL %>">Unclaim</a>
+						</c:when>
+						<c:otherwise>
+							<a href="<%= claimTripTransportationURL %>">Claim</a>
+						</c:otherwise>
+					</c:choose>
+
+					<a href="<%= deleteTripTransportationURL %>">Delete</a>
+				</div>
+
+			<%
+			}
+			%>
+
+			<portlet:actionURL name="addTripTransportation" var="addTripTransportationURL">
+			</portlet:actionURL>
+
+			<form action="<%= addTripTransportationURL %>" method="post">
+				<aui:model-context model="<%= TripTransportation.class %>" />
+				<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+				<aui:input label="" name="seats" />
+				<aui:button type="submit" value="Add Car" />
+			</form>
+		</div>
+	</c:if>
+</div>

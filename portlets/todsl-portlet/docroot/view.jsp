@@ -1,4 +1,4 @@
-<%
+<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,10 +12,65 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
-%>
+--%>
 
-<%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
+<%@ include file="/init.jsp" %>
 
-<portlet:defineObjects />
+<c:choose>
+	<c:when test="<%= Validator.isNotNull(trip) %>">
 
-This is the <b>TODSL</b> portlet.
+		<%
+		String tabs = ParamUtil.getString(request, "tabs", "pre");
+		%>
+
+		<div class="banner lazy-load" id="tripBanner">
+			<div class="banner-content max-medium">
+				<h2 class="banner-heading">
+					<%= trip.getTitle() %> <time datetime="2015-05-23 20:00/2015-05-25 20:00"><%= trip.getTripStart() %> - <%= trip.getTripEnd() %></time>
+				</h2>
+			</div>
+		</div>
+
+		<nav id="tripNavigation">
+			<ul aria-label="Pages" class="nav nav-tabs nav-content" role="menubar">
+				<li class='tab <%= tabs.equals("pre") ? "active" : "" %>'>
+					<a href="<%= layout.getFriendlyURL() %>/-/trip/pre" role="menuitem">Home</a>
+				</li>
+				<li class='tab <%= tabs.equals("prep") ? "active" : "" %>'>
+					<a href="<%= layout.getFriendlyURL() %>/-/trip/prep" role="menuitem">Prep</a>
+				</li>
+				<li class='tab <%= tabs.equals("post") ? "active" : "" %>'>
+					<a href="<%= layout.getFriendlyURL() %>/-/trip/post" role="menuitem">Post</a>
+				</li>
+				<li class='tab <%= tabs.equals("edit") ? "active" : "" %>'>
+					<a href="<%= layout.getFriendlyURL() %>/-/trip/edit" role="menuitem">Edit</a>
+				</li>
+			</ul>
+		</nav>
+
+		<c:choose>
+			<c:when test='<%= tabs.equals("edit") %>'>
+				<%@ include file="/edit.jspf" %>
+			</c:when>
+			<c:when test='<%= tabs.equals("prep") %>'>
+				<%@ include file="/view_prep.jspf" %>
+			</c:when>
+			<c:when test='<%= tabs.equals("post") %>'>
+				<%@ include file="/view_post.jspf" %>
+			</c:when>
+			<c:otherwise>
+				<%@ include file="/view_pre.jspf" %>
+			</c:otherwise>
+		</c:choose>
+	</c:when>
+	<c:otherwise>
+		<portlet:actionURL name="addTrip" var="addTripURL">
+		</portlet:actionURL>
+
+		<form action="<%= addTripURL %>" method="post">
+			<aui:input label="Title" name="title" type="text" />
+			<aui:input label="Description" name="description" type="text" />
+			<aui:button type="submit" value="Submit" />
+		</form>
+	</c:otherwise>
+</c:choose>
