@@ -25,8 +25,6 @@
 
 <%@ page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
-page import="com.liferay.portal.kernel.util.PrefsParamUtil" %><%@
-page import="com.liferay.portal.kernel.util.PrefsPropsUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.model.User" %><%@
 page import="com.liferay.portal.service.UserLocalServiceUtil" %><%@
@@ -48,10 +46,7 @@ page import="com.liferay.todsl.service.TripTransportationLocalServiceUtil" %>
 <liferay-theme:defineObjects />
 
 <%
-long tripId = PrefsParamUtil.getLong(PrefsPropsUtil.getPreferences(), request, "preferences--tripId--");
-tripId = GetterUtil.getLong(504);
+long tripId = GetterUtil.getLong(portletPreferences.getValue("preferences--tripId--", "0"));
 
 Trip trip = TripLocalServiceUtil.fetchTrip(tripId);
 %>
-
-Trip Id: <%= tripId %>

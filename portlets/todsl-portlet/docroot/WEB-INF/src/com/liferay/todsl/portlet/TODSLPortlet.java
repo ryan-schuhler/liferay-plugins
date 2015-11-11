@@ -132,6 +132,7 @@ public class TODSLPortlet extends MVCPortlet {
 		User user = UserLocalServiceUtil.getUser(userId);
 
 		tripExpense.setCreateDate(new Date());
+		tripExpense.setExpensePayeeUserId(userId);
 		tripExpense.setModifiedDate(new Date());
 		tripExpense.setTripId(tripId);
 		tripExpense.setUserId(userId);
@@ -139,8 +140,11 @@ public class TODSLPortlet extends MVCPortlet {
 
 		String expenseTitle = ParamUtil.getString(
 			actionRequest, "expenseTitle");
+		double expenseCost = ParamUtil.getDouble(
+			actionRequest, "expenseCost");
 
 		tripExpense.setExpenseTitle(expenseTitle);
+		tripExpense.setExpenseCost(expenseCost);
 
 		TripExpenseLocalServiceUtil.addTripExpense(tripExpense);
 	}
@@ -222,6 +226,8 @@ public class TODSLPortlet extends MVCPortlet {
 		tripTransportation.setTripId(tripId);
 		tripTransportation.setUserId(userId);
 		tripTransportation.setUserName(user.getFullName());
+
+		tripTransportation.setDriverUserId(userId);
 
 		int seats = ParamUtil.getInteger(actionRequest, "seats");
 
@@ -313,6 +319,7 @@ public class TODSLPortlet extends MVCPortlet {
 		Member member = MemberLocalServiceUtil.fetchMember(memberId);
 
 		member.setMemberUserId(userId);
+
 		// Set User Permissions/Group
 
 		member.setStatus(status);
