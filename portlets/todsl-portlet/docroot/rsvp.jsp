@@ -24,13 +24,28 @@ Member member = MemberLocalServiceUtil.fetchMember(memberId);
 
 <c:choose>
 	<c:when test="<%= Validator.isNotNull(trip) && Validator.isNotNull(member) %>">
-		You have been invited by <%= member.getInvitedByUserId() %> on a trip to <%= trip.getLocation() %>.
+
+		<%
+		long invitedByUserId = member.getInvitedByUserId();
+		String inviteeName = StringPool.BLANK;
+
+		User inviteByUser = UserLocalServiceUtil.fetchUserById(invitedByUserId);
+
+		if (Validator.isNotNull(inviteByUser)) {
+			inviteeName = inviteByUser.getFullName();
+		}
+
+		String redirect = layout.getFriendlyURL() + "/-/trip/" + tripId;
+		%>
+
+		You have been invited by <%= inviteeName %> on a trip to <%= trip.getTripLocation() %>.
 
 		Please let us know if you will be joining.
 
 		<c:choose>
 			<c:when test="<%= themeDisplay.isSignedIn() %>">
 				<portlet:actionURL name="respondToMemberInvitation" var="respondToMemberInvitationURL">
+					<portlet:param name="redirect" value="<%= redirect %>" />
 				</portlet:actionURL>
 
 				<form action="<%= respondToMemberInvitationURL %>" method="post">
@@ -43,6 +58,7 @@ Member member = MemberLocalServiceUtil.fetchMember(memberId);
 
 					<aui:field-wrapper name="status">
 						<aui:input inlineLabel="right" label="yes" name="status" type="radio" value="1" />
+						<aui:input inlineLabel="right" label="maybe" name="status" type="radio" value="3"  />
 						<aui:input inlineLabel="right" label="no" name="status" type="radio" value="2"  />
 					</aui:field-wrapper>
 
@@ -55,6 +71,6 @@ Member member = MemberLocalServiceUtil.fetchMember(memberId);
 		</c:choose>
 	</c:when>
 	<c:otherwise>
-		Sorry this trip doesnt exist
+		Sorry this trip doesn't exist
 	</c:otherwise>
 </c:choose>

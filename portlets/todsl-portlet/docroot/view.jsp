@@ -17,16 +17,16 @@
 <%@ include file="/init.jsp" %>
 
 <c:choose>
-	<c:when test="<%= Validator.isNotNull(trip) %>">
+	<c:when test="<%= themeDisplay.isSignedIn() && Validator.isNotNull(trip) %>">
 
 		<%
 		String tabs = ParamUtil.getString(request, "tabs", "pre");
 		%>
 
-		<div class="banner lazy-load" id="tripBanner">
+		<div class="banner lazy-load" id="tripBanner" style="background-image: url(<%= trip.getTripImage() %>);">
 			<div class="banner-content max-medium">
 				<h2 class="banner-heading">
-					<%= trip.getTitle() %> <time datetime="2015-05-23 20:00/2015-05-25 20:00"><%= trip.getTripStart() %> - <%= trip.getTripEnd() %></time>
+					<%= trip.getTripTitle() %> <time datetime="2015-05-23 20:00/2015-05-25 20:00"><%= trip.getTripStart() %> - <%= trip.getTripEnd() %></time>
 				</h2>
 			</div>
 		</div>
@@ -63,14 +63,18 @@
 			</c:otherwise>
 		</c:choose>
 	</c:when>
-	<c:otherwise>
+	<c:when test="<%= themeDisplay.isSignedIn() %>">
 		<portlet:actionURL name="addTrip" var="addTripURL">
 		</portlet:actionURL>
 
 		<form action="<%= addTripURL %>" method="post">
-			<aui:input label="Title" name="title" type="text" />
-			<aui:input label="Description" name="description" type="text" />
+			<aui:input label="Title" name="tripTitle" type="text" />
+			<aui:input label="Description" name="tripDescription" type="text" />
+			<aui:input label="Friendly Url" name="tripFriendlyUrl" type="text" />
 			<aui:button type="submit" value="Submit" />
 		</form>
+	</c:when>
+	<c:otherwise>
+		Please <a href="<%= themeDisplay.getURLSignIn() %>">Sign In</a> to view trip.
 	</c:otherwise>
 </c:choose>

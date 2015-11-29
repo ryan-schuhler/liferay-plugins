@@ -3,14 +3,17 @@
 		<div id="announcements">
 			<h3>Announcements</h3>
 
-			<liferay-portlet:runtime portletName="84" />
+			<liferay-portlet:runtime
+				portletName="84"
+				queryString="param1=value1&param2=value2"
+			/>
 		</div>
 	</c:if>
 
 	<div class="row-fluid">
 		<c:if test="<%= trip.getDisplayTripGear() %>">
 			<div class="span4">
-				<h3>Gear to Pack</h3>
+				<h3>Personal Gear</h3>
 
 				<table>
 					<tr>
@@ -25,6 +28,7 @@
 					%>
 
 						<portlet:actionURL name="deleteTripGearItem" var="deleteTripGearItemURL">
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 							<portlet:param name="tripGearItemId" value="<%= String.valueOf(tripGearItemId) %>" />
 						</portlet:actionURL>
 
@@ -41,12 +45,106 @@
 				</table>
 
 				<portlet:actionURL name="addTripGearItem" var="addTripGearItemURL">
+					<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 				</portlet:actionURL>
 
 				<form action="<%= addTripGearItemURL %>" method="post">
 					<aui:model-context model="<%= TripGearItem.class %>" />
 					<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
 					<aui:input label="Title" name="itemTitle" />
+					<aui:button type="submit" value="Add Item" />
+				</form>
+			</div>
+		</c:if>
+
+		<c:if test="<%= trip.getDisplayTripGroupGear() %>">
+			<div class="span4">
+				<h3>Group Gear</h3>
+
+				<table>
+					<tr>
+						<th>Title</th>
+						<th>Quantity</th>
+						<th>Users</th>
+						<th>Needed</th>
+						<th>Options</th>
+					</tr>
+
+					<%
+					for (TripGroupGearItem tripGroupGearItem : TripGroupGearItemLocalServiceUtil.getTripGroupGearItems(tripId)) {
+
+						long tripGroupGearItemId = tripGroupGearItem.getTripGroupGearItemId();
+					%>
+
+						<portlet:actionURL name="claimTripGroupGearItem" var="claimTripGroupGearItemURL">
+							<portlet:param name="claim" value="true" />
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+							<portlet:param name="tripGroupGearItemId" value="<%= String.valueOf(tripGroupGearItemId) %>" />
+						</portlet:actionURL>
+
+						<portlet:actionURL name="claimTripGroupGearItem" var="unclaimTripGroupGearItemURL">
+							<portlet:param name="claim" value="false" />
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+							<portlet:param name="tripGroupGearItemId" value="<%= String.valueOf(tripGroupGearItemId) %>" />
+						</portlet:actionURL>
+
+						<portlet:actionURL name="deleteTripGroupGearItem" var="deleteTripGroupGearItemURL">
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+							<portlet:param name="tripGroupGearItemId" value="<%= String.valueOf(tripGroupGearItemId) %>" />
+						</portlet:actionURL>
+
+						<tr>
+							<td><%= tripGroupGearItem.getItemTitle() %></td>
+							<td><%= tripGroupGearItem.getItemQuantity() %></td>
+							<td>
+								<%
+								for (String item  : StringUtil.split(tripGroupGearItem.getItemClaimUserIds())) {
+
+									long groupGearItemUserId = GetterUtil.getLong(item);
+									String groupGearItemUserName = StringPool.BLANK;
+
+									User groupGearItemUser = UserLocalServiceUtil.fetchUserById(groupGearItemUserId);
+
+									if (Validator.isNotNull(groupGearItemUser)) {
+										groupGearItemUserName = groupGearItemUser.getFullName();
+									}
+								%>
+
+									<span><%= groupGearItemUserName %></span>
+
+								<%
+								}
+								%>
+							</td>
+							<td><%= tripGroupGearItem.getItemQuantity() - tripGroupGearItem.getItemCount() %></td>
+							<td>
+								<c:if test="<%= (tripGroupGearItem.getItemQuantity() > tripGroupGearItem.getItemCount()) && !StringUtil.contains(tripGroupGearItem.getItemClaimUserIds(), String.valueOf(user.getUserId())) %>">
+									<a href="<%= claimTripGroupGearItemURL %>">Claim</a>
+								</c:if>
+
+								<c:if test="<%= StringUtil.contains(tripGroupGearItem.getItemClaimUserIds(), String.valueOf(user.getUserId())) %>">
+									<a href="<%= unclaimTripGroupGearItemURL %>">Unclaim</a>
+								</c:if>
+
+								<a href="<%= deleteTripGroupGearItemURL %>">Delete</a>
+							</td>
+						</tr>
+
+					<%
+					}
+					%>
+
+				</table>
+
+				<portlet:actionURL name="addTripGroupGearItem" var="addTripGroupGearItemURL">
+					<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+				</portlet:actionURL>
+
+				<form action="<%= addTripGroupGearItemURL %>" method="post">
+					<aui:model-context model="<%= TripGroupGearItem.class %>" />
+					<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+					<aui:input label="Title" name="itemTitle" />
+					<aui:input label="Quantity" name="itemQuantity" />
 					<aui:button type="submit" value="Add Item" />
 				</form>
 			</div>
@@ -59,6 +157,7 @@
 				<table>
 					<tr>
 						<th>Title</th>
+						<th>Lender</th>
 						<th>Borrower</th>
 						<th>Options</th>
 					</tr>
@@ -73,23 +172,36 @@
 							borrower = UserLocalServiceUtil.getUserById(borrowerId);
 						}
 
+						long lenderId = tripGearLendingItem.getLenderUserId();
+						User lender = null;
+
+						if (lenderId != 0) {
+							lender = UserLocalServiceUtil.getUserById(lenderId);
+						}
+
 						long tripGearLendingItemId = tripGearLendingItem.getTripGearLendingItemId();
 					%>
 
 						<portlet:actionURL name="claimTripGearLendingItem" var="claimTripGearLendingItemURL">
+							<portlet:param name="claim" value="true" />
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+							<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
+						</portlet:actionURL>
+
+						<portlet:actionURL name="claimTripGearLendingItem" var="unclaimTripGearLendingItemURL">
+							<portlet:param name="claim" value="false" />
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 							<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
 						</portlet:actionURL>
 
 						<portlet:actionURL name="deleteTripGearLendingItem" var="deleteTripGearLendingItemURL">
-							<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
-						</portlet:actionURL>
-
-						<portlet:actionURL name="unclaimTripGearLendingItem" var="unclaimTripGearLendingItemURL">
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 							<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
 						</portlet:actionURL>
 
 						<tr>
 							<td><%= tripGearLendingItem.getItemTitle() %></td>
+							<td><%= lender.getFullName() %></td>
 
 							<c:choose>
 								<c:when test="<%= Validator.isNotNull(borrower) %>">
@@ -112,6 +224,7 @@
 				</table>
 
 				<portlet:actionURL name="addTripGearLendingItem" var="addTripGearLendingItemURL">
+					<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 				</portlet:actionURL>
 
 				<form action="<%= addTripGearLendingItemURL %>" method="post">
@@ -150,21 +263,25 @@
 					%>
 
 						<portlet:actionURL name="deleteTripExpense" var="deleteTripExpenseURL">
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 							<portlet:param name="tripExpenseId" value="<%= String.valueOf(tripExpenseId) %>" />
 						</portlet:actionURL>
 
 						<tr>
 							<td><%= tripExpense.getExpenseTitle() %></td>
 							<td><%= tripExpense.getExpenseCost() %></td>
-							<td><%= tripExpense.getExpensePayeeUserId() %></td>
+							<td><%= expensePayee.getFullName() %></td>
 							<td><a href="<%= deleteTripExpenseURL %>">Delete</a></td>
 						</tr>
+
 					<%
 					}
 					%>
+
 				</table>
 
 				<portlet:actionURL name="addTripExpense" var="addTripExpenseURL">
+					<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 				</portlet:actionURL>
 
 				<form action="<%= addTripExpenseURL %>" method="post">
@@ -178,13 +295,30 @@
 			</div>
 		</c:if>
 
-		<c:if test="<%= trip.getDisplayTripQuestions() %>">
+		<c:if test="<%= trip.getDisplayTripDiscussion() %>">
 			<div class="span4">
-				<h3>Ask the trip host</h3>
-			</div>
+				<h3>Discussion</h3>
 
-			<div class="span4">
-				<h3>Poll</h3>
+				<liferay-portlet:runtime
+					portletName="19"
+					queryString=""
+				/>
+
+				<portlet:actionURL name="discussionURL" var="discussionURL">
+					<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+				</portlet:actionURL>
+
+				<!-- <div class="trip-discussion">
+					<liferay-ui:discussion
+						className="<%= trip.getClassName() %>"
+						classPK="<%= trip.getClassPK() %>"
+						formAction="<%= discussionURL %>""
+						formName="fm2"
+						ratingsEnabled="<%= false %>"
+						redirect="<%= themeDisplay.getURLCurrent() %>"
+						userId="<%= trip.getUserId() %>"
+					/>
+				</div> -->
 			</div>
 		</c:if>
 	</div>
@@ -195,9 +329,10 @@
 
 			<table>
 					<tr>
-						<th>Seats</th>
 						<th>Driver</th>
-						<th>Passangers</th>
+						<th>Passengers</th>
+						<th>Seats</th>
+						<th>Remaining</th>
 						<th>Options</th>
 					</tr>
 
@@ -215,20 +350,23 @@
 				%>
 
 					<portlet:actionURL name="claimTripTransportation" var="claimTripTransportationURL">
+						<portlet:param name="claim" value="true" />
+						<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+						<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
+					</portlet:actionURL>
+
+					<portlet:actionURL name="claimTripTransportation" var="unclaimTripTransportationURL">
+						<portlet:param name="claim" value="false" />
+						<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 						<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
 					</portlet:actionURL>
 
 					<portlet:actionURL name="deleteTripTransportation" var="deleteTripTransportationURL">
-						<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
-					</portlet:actionURL>
-
-					<portlet:actionURL name="unclaimTripTransportation" var="unclaimTripTransportationURL">
+						<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 						<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
 					</portlet:actionURL>
 
 					<tr>
-						<td><%= tripTransportation.getSeats() %></td>
-
 						<c:choose>
 							<c:when test="<%= Validator.isNotNull(driver) %>">
 								<td><%= driver.getFullName() %></td>
@@ -238,11 +376,38 @@
 							</c:otherwise>
 						</c:choose>
 
-						<td><%= tripTransportation.getPassangerUserIds() %></td>
+						<td>
+							<%
+							for (String item  : StringUtil.split(tripTransportation.getPassengerUserIds())) {
+
+								long transportationUserId = GetterUtil.getLong(item);
+								String transportationUserName = StringPool.BLANK;
+
+								User transportationUser = UserLocalServiceUtil.fetchUserById(transportationUserId);
+
+								if (Validator.isNotNull(transportationUser)) {
+									transportationUserName = transportationUser.getFullName();
+								}
+							%>
+
+								<span><%= transportationUserName %></span>
+
+							<%
+							}
+							%>
+						</td>
+
+						<td><%= tripTransportation.getCapacity() %></td>
+
+						<td><%= tripTransportation.getCapacity() - tripTransportation.getCount() %></td>
 
 						<td>
-							<a href="<%= claimTripTransportationURL %>">Claim</a>
-							<a href="<%= unclaimTripTransportationURL %>">Unclaim</a>
+							<c:if test="<%= (tripTransportation.getCapacity() > tripTransportation.getCount()) && !StringUtil.contains(tripTransportation.getPassengerUserIds(), String.valueOf(user.getUserId()))%>">
+								<a href="<%= claimTripTransportationURL %>">Claim</a>
+							</c:if>
+							<c:if test="<%= StringUtil.contains(tripTransportation.getPassengerUserIds(), String.valueOf(user.getUserId())) %>">
+								<a href="<%= unclaimTripTransportationURL %>">Unclaim</a>
+							</c:if>
 							<a href="<%= deleteTripTransportationURL %>">Delete</a>
 						</td>
 					</tr>
@@ -254,12 +419,13 @@
 			</table>
 
 			<portlet:actionURL name="addTripTransportation" var="addTripTransportationURL">
+				<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 			</portlet:actionURL>
 
 			<form action="<%= addTripTransportationURL %>" method="post">
 				<aui:model-context model="<%= TripTransportation.class %>" />
 				<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
-				<aui:input label="Seats" name="seats" />
+				<aui:input label="Seats" name="capacity" />
 				<aui:button type="submit" value="Add Car" />
 			</form>
 		</div>

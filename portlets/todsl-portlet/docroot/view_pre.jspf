@@ -1,10 +1,10 @@
 <div class="max-full pre-trip">
 	<div class="span12">
-		<h3 class="lego-element"> Trip Overview </h3>
-		<p class="lego-element "><%= trip.getOverview() %></p>
+		<h3 class="lego-element"> Trip Description </h3>
+		<p class="lego-element "><%= trip.getTripDescription() %></p>
 
 		<span>Estimated Cost Per Person</span>
-		<p><%= trip.getCostEstimate() %></p>
+		<p><%= trip.getTripCostEstimate() %></p>
 		<c:if test="<%= trip.getDisplayTripExpenses() %>">
 			<p>Cost</p>
 		</c:if>
@@ -39,16 +39,25 @@
 
 						<portlet:actionURL name="respondToMemberInvitation" var="acceptMemberInvitationURL">
 							<portlet:param name="memberId" value="<%= String.valueOf(memberId) %>" />
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 							<portlet:param name="status" value="1" />
 							<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
 						</portlet:actionURL>
 						<portlet:actionURL name="respondToMemberInvitation" var="declineMemberInvitationURL">
 							<portlet:param name="memberId" value="<%= String.valueOf(memberId) %>" />
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 							<portlet:param name="status" value="2" />
+							<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
+						</portlet:actionURL>
+						<portlet:actionURL name="respondToMemberInvitation" var="maybeMemberInvitationURL">
+							<portlet:param name="memberId" value="<%= String.valueOf(memberId) %>" />
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+							<portlet:param name="status" value="3" />
 							<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
 						</portlet:actionURL>
 						<portlet:actionURL name="deleteMember" var="deleteMemberURL">
 							<portlet:param name="memberId" value="<%= String.valueOf(memberId) %>" />
+							<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 						</portlet:actionURL>
 
 						<tr>
@@ -63,13 +72,31 @@
 							</c:choose>
 							</td>
 							<td><%= member.getMemberEmail() %></td>
-							<td><%= member.getStatus() %></td>
+							<td>
+								<c:choose>
+									<c:when test="<%= member.getStatus()  == 1%>">
+										Going
+									</c:when>
+									<c:when test="<%= member.getStatus()  == 2%>">
+										Not Going
+									</c:when>
+									<c:when test="<%= member.getStatus()  == 3%>">
+										Maybe Going
+									</c:when>
+									<c:otherwise>
+										Hasn't Responded
+									</c:otherwise>
+								</c:choose>
+							</td>
 							<td>
 								<a href="<%= acceptMemberInvitationURL %>">Accept</a>
+								<a href="<%= maybeMemberInvitationURL %>">Maybe</a>
 								<a href="<%= declineMemberInvitationURL %>">Decline</a>
 								<a href="<%= deleteMemberURL %>">Delete</a>
 							</td>
-							<td><a href="<%= layout.getFriendlyURL() %>/-/trip/rsvp/<%= memberId %>"><%= layout.getRegularURL(request) %>/-/trip/rsvp/<%= memberId %></a></td>
+							<td>
+								<a href="<%= layout.getFriendlyURL() %>/-/trip/rsvp/<%= memberId %>" target="_blank"><%= layout.getRegularURL(request) %>/-/trip/rsvp/<%= memberId %></a>
+							</td>
 						</tr>
 
 					<%
@@ -82,6 +109,7 @@
 
 		<div class="span6">
 			<portlet:actionURL name="addMember" var="addMemberURL">
+				<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 			</portlet:actionURL>
 
 			<form action="<%= addMemberURL %>" method="post">
@@ -194,7 +222,7 @@
 			<div class="span6">
 				<h3>Maps</h3>
 
-				<p><%= trip.getLocation() %></p>
+				<p><%= trip.getTripLocation() %></p>
 			</div>
 		</c:if>
 		<c:if test="<%= trip.getDisplayTripWeather() %>">

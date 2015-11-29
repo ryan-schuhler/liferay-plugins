@@ -23,28 +23,30 @@
 
 		<!-- Basic fields -->
 
-		<column name="capacity" type="int" />
-		<column name="costEstimate" type="String" />
-		<column name="image" type="String" />
-		<column name="location" type="String" />
-		<column name="overview" type="String" />
-		<column name="title" type="String" />
+		<column name="tripCapacity" type="int" />
+		<column name="tripCostEstimate" type="String" />
+		<column name="tripDescription" type="String" />
 		<column name="tripEnd" type="Date" />
+		<column name="tripFriendlyUrl" type="String" />
+		<column name="tripImage" type="String" />
+		<column name="tripLocation" type="String" />
 		<column name="tripStart" type="Date" />
+		<column name="tripTitle" type="String" />
 
 		<!-- Table fields -->
 
 		<column name="displayTripAnnouncements" type="boolean" />
 		<column name="displayTripCountdown" type="boolean" />
+		<column name="displayTripDiscussion" type="boolean" />
 		<column name="displayTripExpenses" type="boolean" />
 		<column name="displayTripGear" type="boolean" />
 		<column name="displayTripGearLending" type="boolean" />
+		<column name="displayTripGroupGear" type="boolean" />
 		<column name="displayTripMap" type="boolean" />
 		<column name="displayTripTransportation" type="boolean" />
-		<column name="displayTripQuestions" type="boolean" />
 		<column name="displayTripWeather" type="boolean" />
 		<column name="tripAnnouncementsId" type="long" />
-		<column name="tripQuestionsId" type="long" />
+		<column name="tripForumId" type="long" />
 	</entity>
 	<entity name="Member" local-service="true" remote-service="true">
 
@@ -92,9 +94,9 @@
 
 		<!-- Other fields -->
 
-		<column name="expenseTitle" type="String" />
 		<column name="expenseCost" type="double" />
 		<column name="expensePayeeUserId" type="long" />
+		<column name="expenseTitle" type="String" />
 	</entity>
 	<entity name="TripGearItem" local-service="true" remote-service="true">
 
@@ -116,9 +118,9 @@
 
 		<!-- Other fields -->
 
-		<column name="itemTitle" type="String" />
-		<column name="itemRequired" type="boolean" />
 		<column name="itemCategory" type="String" />
+		<column name="itemRequired" type="boolean" />
+		<column name="itemTitle" type="String" />
 	</entity>
 	<entity name="TripGearLendingItem" local-service="true" remote-service="true">
 
@@ -140,9 +142,36 @@
 
 		<!-- Other fields -->
 
-		<column name="itemTitle" type="String" />
-		<column name="lenderUserId" type="long" />
 		<column name="borrowerUserId" type="long" />
+		<column name="lenderUserId" type="long" />
+		<column name="itemTitle" type="String" />
+	</entity>
+	<entity name="TripGroupGearItem" local-service="true" remote-service="true">
+
+		<!-- PK fields -->
+
+		<column name="tripGroupGearItemId" type="long" primary="true" />
+
+		<!-- Group instance -->
+
+		<column name="groupId" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+		<column name="tripId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+
+		<!-- Other fields -->
+
+		<column name="itemCategory" type="String" />
+		<column name="itemClaimUserIds" type="String" />
+		<column name="itemCount" type="int" />
+		<column name="itemQuantity" type="int" />
+		<column name="itemRequired" type="boolean" />
+		<column name="itemTitle" type="String" />
 	</entity>
 	<entity name="TripTransportation" local-service="true" remote-service="true">
 
@@ -165,7 +194,8 @@
 		<!-- Other fields -->
 
 		<column name="driverUserId" type="long" />
-		<column name="passangerUserIds" type="long" />
-		<column name="seats" type="int" />
+		<column name="passengerUserIds" type="String" />
+		<column name="capacity" type="int" />
+		<column name="count" type="int" />
 	</entity>
 </service-builder>

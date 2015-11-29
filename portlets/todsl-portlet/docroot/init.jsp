@@ -25,6 +25,8 @@
 
 <%@ page import="com.liferay.portal.kernel.util.GetterUtil" %><%@
 page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
+page import="com.liferay.portal.kernel.util.StringPool" %><%@
+page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.model.User" %><%@
 page import="com.liferay.portal.service.UserLocalServiceUtil" %><%@
@@ -33,11 +35,13 @@ page import="com.liferay.todsl.model.Trip" %><%@
 page import="com.liferay.todsl.model.TripExpense" %><%@
 page import="com.liferay.todsl.model.TripGearItem" %><%@
 page import="com.liferay.todsl.model.TripGearLendingItem" %><%@
+page import="com.liferay.todsl.model.TripGroupGearItem" %><%@
 page import="com.liferay.todsl.model.TripTransportation" %><%@
 page import="com.liferay.todsl.service.MemberLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripExpenseLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripGearItemLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripGearLendingItemLocalServiceUtil" %><%@
+page import="com.liferay.todsl.service.TripGroupGearItemLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripTransportationLocalServiceUtil" %>
 
@@ -48,5 +52,19 @@ page import="com.liferay.todsl.service.TripTransportationLocalServiceUtil" %>
 <%
 long tripId = GetterUtil.getLong(portletPreferences.getValue("preferences--tripId--", "0"));
 
-Trip trip = TripLocalServiceUtil.fetchTrip(tripId);
+if (tripId == 0) {
+	tripId = ParamUtil.getLong(request, "tripId");
+}
+
+Trip trip = null;
+
+if (tripId != 0) {
+	trip = TripLocalServiceUtil.fetchTrip(tripId);
+}
+else {
+	String tripName = ParamUtil.getString(request, "tripName");
+
+	System.out.println("Trip Name");
+	System.out.println(tripName);
+}
 %>

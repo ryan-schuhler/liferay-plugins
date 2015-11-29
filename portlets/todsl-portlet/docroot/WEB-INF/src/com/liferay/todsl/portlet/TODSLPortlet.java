@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -31,11 +32,13 @@ import com.liferay.todsl.model.Trip;
 import com.liferay.todsl.model.TripExpense;
 import com.liferay.todsl.model.TripGearItem;
 import com.liferay.todsl.model.TripGearLendingItem;
+import com.liferay.todsl.model.TripGroupGearItem;
 import com.liferay.todsl.model.TripTransportation;
 import com.liferay.todsl.service.MemberLocalServiceUtil;
 import com.liferay.todsl.service.TripExpenseLocalServiceUtil;
 import com.liferay.todsl.service.TripGearItemLocalServiceUtil;
 import com.liferay.todsl.service.TripGearLendingItemLocalServiceUtil;
+import com.liferay.todsl.service.TripGroupGearItemLocalServiceUtil;
 import com.liferay.todsl.service.TripLocalServiceUtil;
 import com.liferay.todsl.service.TripTransportationLocalServiceUtil;
 
@@ -103,11 +106,15 @@ public class TODSLPortlet extends MVCPortlet {
 		trip.setUserId(userId);
 		trip.setUserName(user.getFullName());
 
-		String title = ParamUtil.getString(actionRequest, "title");
-		String overview = ParamUtil.getString(actionRequest, "overview");
+		String tripDescription = ParamUtil.getString(
+			actionRequest, "tripDescription");
+		String tripFriendlyUrl = ParamUtil.getString(
+			actionRequest, "tripFriendlyUrl");
+		String tripTitle = ParamUtil.getString(actionRequest, "tripTitle");
 
-		trip.setOverview(overview);
-		trip.setTitle(title);
+		trip.setTripDescription(tripDescription);
+		trip.setTripFriendlyUrl(tripFriendlyUrl);
+		trip.setTripTitle(tripTitle);
 
 		TripLocalServiceUtil.addTrip(trip);
 
@@ -140,8 +147,7 @@ public class TODSLPortlet extends MVCPortlet {
 
 		String expenseTitle = ParamUtil.getString(
 			actionRequest, "expenseTitle");
-		double expenseCost = ParamUtil.getDouble(
-			actionRequest, "expenseCost");
+		double expenseCost = ParamUtil.getDouble(actionRequest, "expenseCost");
 
 		tripExpense.setExpenseTitle(expenseTitle);
 		tripExpense.setExpenseCost(expenseCost);
@@ -206,6 +212,35 @@ public class TODSLPortlet extends MVCPortlet {
 			tripGearLendingItem);
 	}
 
+	public void addTripGroupGearItem(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long tripGroupGearItemId = CounterLocalServiceUtil.increment(
+			TripGroupGearItem.class.getName());
+
+		TripGroupGearItem tripGroupGearItem =
+			TripGroupGearItemLocalServiceUtil.createTripGroupGearItem(tripGroupGearItemId);
+
+		long tripId = ParamUtil.getLong(actionRequest, "tripId");
+		long userId = PortalUtil.getUserId(actionRequest);
+		User user = UserLocalServiceUtil.getUser(userId);
+
+		tripGroupGearItem.setCreateDate(new Date());
+		tripGroupGearItem.setModifiedDate(new Date());
+		tripGroupGearItem.setTripId(tripId);
+		tripGroupGearItem.setUserId(userId);
+		tripGroupGearItem.setUserName(user.getFullName());
+
+		int itemQuantity = ParamUtil.getInteger(actionRequest, "itemQuantity");
+		String itemTitle = ParamUtil.getString(actionRequest, "itemTitle");
+
+		tripGroupGearItem.setItemQuantity(itemQuantity);
+		tripGroupGearItem.setItemTitle(itemTitle);
+
+		TripGroupGearItemLocalServiceUtil.addTripGroupGearItem(tripGroupGearItem);
+	}
+
 	public void addTripTransportation(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -229,9 +264,10 @@ public class TODSLPortlet extends MVCPortlet {
 
 		tripTransportation.setDriverUserId(userId);
 
-		int seats = ParamUtil.getInteger(actionRequest, "seats");
+		int capacity = ParamUtil.getInteger(actionRequest, "capacity");
 
-		tripTransportation.setSeats(seats);
+		tripTransportation.setCapacity(capacity);
+		tripTransportation.setCount(0);
 
 		TripTransportationLocalServiceUtil.addTripTransportation(
 			tripTransportation);
@@ -250,12 +286,91 @@ public class TODSLPortlet extends MVCPortlet {
 
 		tripGearLendingItem.setModifiedDate(new Date());
 
-		long userId = PortalUtil.getUserId(actionRequest);
+		boolean claim = ParamUtil.getBoolean(actionRequest, "claim");
+		long userId = 0;
+
+		if (claim) {
+			userId = PortalUtil.getUserId(actionRequest);
+		}
 
 		tripGearLendingItem.setBorrowerUserId(userId);
 
 		TripGearLendingItemLocalServiceUtil.updateTripGearLendingItem(
 			tripGearLendingItem);
+	}
+
+	public void claimTripGroupGearItem(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long tripGroupGearItemId = ParamUtil.getLong(
+			actionRequest, "tripGroupGearItemId");
+
+		TripGroupGearItem tripGroupGearItem =
+			TripGroupGearItemLocalServiceUtil.fetchTripGroupGearItem(
+			tripGroupGearItemId);
+
+		tripGroupGearItem.setModifiedDate(new Date());
+
+		boolean claim = ParamUtil.getBoolean(actionRequest, "claim");
+		int itemQuantity = tripGroupGearItem.getItemQuantity();
+		int itemCount = tripGroupGearItem.getItemCount();
+		String itemClaimUserIds = tripGroupGearItem.getItemClaimUserIds();
+		String userId = StringUtil.valueOf(PortalUtil.getUserId(actionRequest));
+
+		if (claim && !StringUtil.contains(itemClaimUserIds, userId)) {
+			itemClaimUserIds = StringUtil.add(itemClaimUserIds, userId);
+
+			itemCount++;
+		}
+		else if (StringUtil.contains(itemClaimUserIds, userId)) {
+			itemClaimUserIds = StringUtil.remove(itemClaimUserIds, userId);
+
+			itemCount--;
+		}
+
+		tripGroupGearItem.setItemCount(itemCount);
+		tripGroupGearItem.setItemClaimUserIds(itemClaimUserIds);
+
+		TripGroupGearItemLocalServiceUtil.updateTripGroupGearItem(
+			tripGroupGearItem);
+	}
+
+	public void claimTripTransportation(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long tripTransportationId = ParamUtil.getLong(
+			actionRequest, "tripTransportationId");
+
+		TripTransportation tripTransportation =
+			TripTransportationLocalServiceUtil.fetchTripTransportation(
+			tripTransportationId);
+
+		tripTransportation.setModifiedDate(new Date());
+
+		boolean claim = ParamUtil.getBoolean(actionRequest, "claim");
+		int capacity = tripTransportation.getCapacity();
+		int count = tripTransportation.getCount();
+		String passengerUserIds = tripTransportation.getPassengerUserIds();
+		String userId = StringUtil.valueOf(PortalUtil.getUserId(actionRequest));
+
+		if (claim && !StringUtil.contains(passengerUserIds, userId)) {
+			passengerUserIds = StringUtil.add(passengerUserIds, userId);
+
+			count++;
+		}
+		else if (StringUtil.contains(passengerUserIds, userId)) {
+			passengerUserIds = StringUtil.remove(passengerUserIds, userId);
+
+			count--;
+		}
+
+		tripTransportation.setCount(count);
+		tripTransportation.setPassengerUserIds(passengerUserIds);
+
+		TripTransportationLocalServiceUtil.updateTripTransportation(
+			tripTransportation);
 	}
 
 	public void deleteMember(
@@ -297,6 +412,17 @@ public class TODSLPortlet extends MVCPortlet {
 			tripGearLendingItemId);
 	}
 
+	public void deleteTripGroupGearItem(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long tripGroupGearItemId = ParamUtil.getLong(
+			actionRequest, "tripGroupGearItemId");
+
+		TripGroupGearItemLocalServiceUtil.deleteTripGroupGearItem(
+			tripGroupGearItemId);
+	}
+
 	public void deleteTripTransportation(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -327,25 +453,6 @@ public class TODSLPortlet extends MVCPortlet {
 		MemberLocalServiceUtil.updateMember(member);
 	}
 
-	public void unclaimTripGearLendingItem(
-			ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-
-		long tripGearLendingItemId = ParamUtil.getLong(
-			actionRequest, "tripGearLendingItemId");
-
-		TripGearLendingItem tripGearLendingItem =
-			TripGearLendingItemLocalServiceUtil.fetchTripGearLendingItem(
-				tripGearLendingItemId);
-
-		tripGearLendingItem.setModifiedDate(new Date());
-
-		tripGearLendingItem.setBorrowerUserId(0);
-
-		TripGearLendingItemLocalServiceUtil.updateTripGearLendingItem(
-			tripGearLendingItem);
-	}
-
 	public void updateTrip(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -354,49 +461,64 @@ public class TODSLPortlet extends MVCPortlet {
 					DateFormatFactoryUtil.getSimpleDateFormat(
 						"yyyy/MM/dd HH:mm:ss");
 
-		Integer capacity = ParamUtil.getInteger(actionRequest, "capacity");
-		String costEstimate = ParamUtil.getString(
-			actionRequest, "costEstimate");
 		boolean displayTripAnnouncements = ParamUtil.getBoolean(
 			actionRequest, "displayTripAnnouncements");
+		boolean displayTripCountdown = ParamUtil.getBoolean(
+			actionRequest, "displayTripCountdown");
+		boolean displayTripDiscussion = ParamUtil.getBoolean(
+			actionRequest, "displayTripDiscussion");
 		boolean displayTripExpenses = ParamUtil.getBoolean(
 			actionRequest, "displayTripExpenses");
 		boolean displayTripGear = ParamUtil.getBoolean(
 			actionRequest, "displayTripGear");
 		boolean displayTripGearLending = ParamUtil.getBoolean(
 			actionRequest, "displayTripGearLending");
-		boolean displayTripQuestions = ParamUtil.getBoolean(
-			actionRequest, "displayTripQuestions");
+		boolean displayTripGroupGear = ParamUtil.getBoolean(
+			actionRequest, "displayTripGroupGear");
+		boolean displayTripMap = ParamUtil.getBoolean(
+			actionRequest, "displayTripMap");
 		boolean displayTripTransportation = ParamUtil.getBoolean(
 			actionRequest, "displayTripTransportation");
-		String image = ParamUtil.getString(actionRequest, "image");
-		String location = ParamUtil.getString(actionRequest, "location");
-		String overview = ParamUtil.getString(actionRequest, "overview");
-		String title = ParamUtil.getString(actionRequest, "title");
+		boolean displayTripWeather = ParamUtil.getBoolean(
+			actionRequest, "displayTripWeather");
+		Integer tripCapacity = ParamUtil.getInteger(
+			actionRequest, "tripCapacity");
+		String tripCostEstimate = ParamUtil.getString(
+			actionRequest, "tripCostEstimate");
+		String tripDescription = ParamUtil.getString(
+			actionRequest, "tripDescription");
+		Date tripEnd = ParamUtil.getDate(actionRequest, "tripEnd", dateFormat);
 		long tripId = ParamUtil.getLong(actionRequest, "tripId");
+		String tripImage = ParamUtil.getString(actionRequest, "tripImage");
+		String tripLocation = ParamUtil.getString(
+			actionRequest, "tripLocation");
 		Date tripStart = ParamUtil.getDate(
 			actionRequest, "tripStart", dateFormat);
-		Date tripEnd = ParamUtil.getDate(actionRequest, "tripEnd", dateFormat);
+		String tripTitle = ParamUtil.getString(actionRequest, "tripTitle");
 
 		Trip trip = TripLocalServiceUtil.getTrip(tripId);
 
 		trip.setModifiedDate(new Date());
 
-		trip.setCapacity(capacity);
-		trip.setCostEstimate(costEstimate);
-		trip.setImage(image);
-		trip.setLocation(location);
-		trip.setOverview(overview);
-		trip.setTitle(title);
+		trip.setTripCapacity(tripCapacity);
+		trip.setTripCostEstimate(tripCostEstimate);
+		trip.setTripDescription(tripDescription);
 		trip.setTripEnd(tripEnd);
+		trip.setTripImage(tripImage);
+		trip.setTripLocation(tripLocation);
 		trip.setTripStart(tripStart);
+		trip.setTripTitle(tripTitle);
 
 		trip.setDisplayTripAnnouncements(displayTripAnnouncements);
+		trip.setDisplayTripCountdown(displayTripCountdown);
+		trip.setDisplayTripDiscussion(displayTripDiscussion);
 		trip.setDisplayTripExpenses(displayTripExpenses);
 		trip.setDisplayTripGear(displayTripGear);
 		trip.setDisplayTripGearLending(displayTripGearLending);
-		trip.setDisplayTripQuestions(displayTripQuestions);
+		trip.setDisplayTripGroupGear(displayTripGroupGear);
+		trip.setDisplayTripMap(displayTripMap);
 		trip.setDisplayTripTransportation(displayTripTransportation);
+		trip.setDisplayTripWeather(displayTripWeather);
 
 		TripLocalServiceUtil.updateTrip(trip);
 	}
