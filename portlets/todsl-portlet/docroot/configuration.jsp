@@ -26,13 +26,3 @@
 
 	<aui:button type="submit" value="Save" />
 </aui:form>
-
-<portlet:actionURL name="addTrip" var="addTripURL">
-</portlet:actionURL>
-
-<form action="<%= addTripURL %>" method="post">
-	<aui:input label="Title" name="tripTitle" type="text" />
-	<aui:input label="Description" name="tripDescription" type="text" />
-	<aui:input label="Friendly Url" name="tripFriendlyUrl" type="text" />
-	<aui:button type="submit" value="Submit" />
-</form>

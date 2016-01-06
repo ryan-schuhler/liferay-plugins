@@ -30,26 +30,33 @@ page import="com.liferay.portal.kernel.util.StringUtil" %><%@
 page import="com.liferay.portal.kernel.util.Validator" %><%@
 page import="com.liferay.portal.model.User" %><%@
 page import="com.liferay.portal.service.UserLocalServiceUtil" %><%@
-page import="com.liferay.todsl.model.Member" %><%@
+page import="com.liferay.portal.util.PortalUtil" %><%@
 page import="com.liferay.todsl.model.Trip" %><%@
 page import="com.liferay.todsl.model.TripExpense" %><%@
+page import="com.liferay.todsl.model.TripGearGroupItem" %><%@
 page import="com.liferay.todsl.model.TripGearItem" %><%@
 page import="com.liferay.todsl.model.TripGearLendingItem" %><%@
-page import="com.liferay.todsl.model.TripGroupGearItem" %><%@
+page import="com.liferay.todsl.model.TripMember" %><%@
 page import="com.liferay.todsl.model.TripTransportation" %><%@
-page import="com.liferay.todsl.service.MemberLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripExpenseLocalServiceUtil" %><%@
+page import="com.liferay.todsl.service.TripGearGroupItemLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripGearItemLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripGearLendingItemLocalServiceUtil" %><%@
-page import="com.liferay.todsl.service.TripGroupGearItemLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripLocalServiceUtil" %><%@
+page import="com.liferay.todsl.service.TripMemberLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripTransportationLocalServiceUtil" %>
+
+<%@ page import="java.text.SimpleDateFormat" %>
 
 <portlet:defineObjects />
 
 <liferay-theme:defineObjects />
 
 <%
+SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, MMMM d, yyyy");
+
+String baseURL = PortalUtil.getLayoutFriendlyURL(layout, themeDisplay) + "/-/trip/";
+
 long tripId = ParamUtil.getLong(request, "tripId");
 
 if (tripId == 0) {

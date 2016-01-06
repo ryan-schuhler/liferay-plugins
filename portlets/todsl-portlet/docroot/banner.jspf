@@ -1,0 +1,31 @@
+<div class="banner lazy-load span12" id="tripBanner" style="background-image: url(<%= trip.getTripImage() %>); min-height: 400px;">
+	<div class="banner-content max-small">
+		<c:if test="<%= Validator.isNotNull(trip.getTripTitle()) %>">
+			<h2 class="banner-heading light-color">
+				<%= trip.getTripTitle() %>
+			</h2>
+		</c:if>
+
+		<div class="trip-info">
+			<c:if test="<%= Validator.isNotNull(trip.getTripHost()) %>">
+				<h3>Host</h3>
+				<span class="trip-host"><%= trip.getTripHost() %></span>
+			</c:if>
+
+			<c:if test="<%= Validator.isNotNull(trip.getTripStart()) %>">
+				<h3>When</h3>
+				<span class="trip-dates"><time datetime="2015-05-23 20:00/2015-05-25 20:00"><%= dateFormat.format(trip.getTripStart()) %> to </br> <%= dateFormat.format(trip.getTripEnd()) %></time></span>
+			</c:if>
+
+			<c:if test="<%= Validator.isNotNull(trip.getTripLocation()) %>">
+				<h3>Where</h3>
+				<span class="trip-location"><%= trip.getTripLocation() %></span>
+			</c:if>
+
+			<c:if test="<%= Validator.isNotNull(trip.getTripCostEstimate()) %>">
+				<h3>Cost</h3>
+				<span class="trip-cost"><%= trip.getTripCostEstimate() %></span>
+			</c:if>
+		</div>
+	</div>
+</div>

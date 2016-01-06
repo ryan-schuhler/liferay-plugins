@@ -17,22 +17,22 @@
 <%@ include file="/init.jsp" %>
 
 <%
-long memberId = ParamUtil.getLong(request, "memberId");
+long tripMemberId = ParamUtil.getLong(request, "tripMemberId");
 
-Member member = MemberLocalServiceUtil.fetchMember(memberId);
+TripMember tripMember = TripMemberLocalServiceUtil.fetchTripMember(tripMemberId);
 %>
 
 <c:choose>
-	<c:when test="<%= Validator.isNotNull(trip) && Validator.isNotNull(member) %>">
+	<c:when test="<%= Validator.isNotNull(trip) && Validator.isNotNull(tripMember) %>">
 
 		<%
-		long invitedByUserId = member.getInvitedByUserId();
+		long tripMemberInvitedByUserId = tripMember.getTripMemberInvitedByUserId();
 		String inviteeName = StringPool.BLANK;
 
-		User inviteByUser = UserLocalServiceUtil.fetchUserById(invitedByUserId);
+		User tripMemberInvitedByUser = UserLocalServiceUtil.fetchUserById(tripMemberInvitedByUserId);
 
-		if (Validator.isNotNull(inviteByUser)) {
-			inviteeName = inviteByUser.getFullName();
+		if (Validator.isNotNull(tripMemberInvitedByUser)) {
+			inviteeName = tripMemberInvitedByUser.getFullName();
 		}
 
 		String redirect = layout.getFriendlyURL() + "/-/trip/" + trip.getTripId();
@@ -44,22 +44,22 @@ Member member = MemberLocalServiceUtil.fetchMember(memberId);
 
 		<c:choose>
 			<c:when test="<%= themeDisplay.isSignedIn() %>">
-				<portlet:actionURL name="respondToMemberInvitation" var="respondToMemberInvitationURL">
+				<portlet:actionURL name="respondToTripMemberInvitation" var="respondToTripMemberInvitationURL">
 					<portlet:param name="redirect" value="<%= redirect %>" />
 				</portlet:actionURL>
 
-				<form action="<%= respondToMemberInvitationURL %>" method="post">
+				<form action="<%= respondToTripMemberInvitationURL %>" method="post">
 
-					<aui:model-context bean="<%= member %>" model="<%= Member.class %>" />
+					<aui:model-context bean="<%= tripMember %>" model="<%= TripMember.class %>" />
 
-					<aui:input name="memberId" type="hidden" value="<%= memberId %>" />
+					<aui:input name="tripMemberId" type="hidden" value="<%= tripMemberId %>" />
 					<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
 					<aui:input name="userId" type="hidden" value="<%= user.getUserId() %>" />
 
-					<aui:field-wrapper name="status">
-						<aui:input inlineLabel="right" label="yes" name="status" type="radio" value="1" />
-						<aui:input inlineLabel="right" label="maybe" name="status" type="radio" value="3"  />
-						<aui:input inlineLabel="right" label="no" name="status" type="radio" value="2"  />
+					<aui:field-wrapper name="tripMemberStatus">
+						<aui:input inlineLabel="right" label="yes" name="tripMemberStatus" type="radio" value="1" />
+						<aui:input inlineLabel="right" label="maybe" name="tripMemberStatus" type="radio" value="3"  />
+						<aui:input inlineLabel="right" label="no" name="tripMemberStatus" type="radio" value="2"  />
 					</aui:field-wrapper>
 
 					<aui:button type="submit" value="Submit" />

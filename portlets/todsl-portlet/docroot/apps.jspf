@@ -1,0 +1,31 @@
+<%
+String url = baseURL + trip.getTripId();
+%>
+
+<ul>
+	<li><a href="<%= url %>/trip-feed">Trip Feed</a></li>
+
+	<li><a href="<%= url %>/trip-info">Trip Info</a></li>
+
+	<c:if test="<%= trip.getDisplayTripGearItems() %>">
+		<li><a href="<%= url %>/trip-gear">Trip Gear</a></li>
+	</c:if>
+
+	<c:if test="<%= trip.getDisplayTripGearGroupItems() %>">
+		<li><a href="<%= url %>/trip-gear-group">Group Gear</a></li>
+	</c:if>
+
+	<c:if test="<%= trip.getDisplayTripGearLendingItems() %>">
+		<li><a href="<%= url %>/trip-gear-lending">Gear Lending</a></li>
+	</c:if>
+
+	<c:if test="<%= trip.getDisplayTripExpenses() %>">
+		<li><a href="<%= url %>/trip-expenses">Cost</a></li>
+	</c:if>
+
+	<c:if test="<%= trip.getDisplayTripTransportation() %>">
+		<li><a href="<%= url %>/trip-transportation">Transportation</a></li>
+	</c:if>
+
+	<li><a href="<%= url %>/edit">Edit Trip</a></li>
+</ul>

@@ -1,0 +1,111 @@
+.aui {
+	#banner {
+		display: none;
+	}
+
+	#main-content.columns-1  {
+		padding-top: 0;
+
+		div.portlet-boundary {
+			max-width: none;
+		}
+	}
+
+	.todsl-portlet {
+		.display table {
+			margin: 0 auto;
+
+			&, tr {
+				border: 1px solid gray;
+				text-align: center;
+			}
+
+			tr {
+				border-bottom-width: 0;
+				border-left-width: 0;
+			}
+
+			td, th {
+				max-width: 100px;
+				padding: 5px;
+				vertical-align: middle;
+			}
+
+			td .control-group {
+				margin: 0;
+			}
+
+			td .btn {
+				font-size: inherit;
+				padding: 5px;
+			}
+
+			input {
+				box-shadow: none;
+				box-sizing: border-box;
+				font-size: 1em;
+				height: auto;
+				margin: 0;
+				text-align: center;
+				width: 100%;
+			}
+		}
+
+		.apps {
+			border-left: 1px solid #003366;
+
+			ul {
+				margin: 0;
+			}
+
+			li {
+				list-style: none;
+			}
+
+			a {
+				border-bottom: 1px solid #003366;
+				color: #003366;
+				display: block;
+				padding: 1em;
+				text-align: center;
+
+				&:hover {
+					background: #003366;
+					color: #FFF;
+				}
+			}
+		}
+
+		.banner {
+			align-items: center;
+			background-size: cover;
+			color: #FFF;
+			display: flex;
+
+			.banner-content {
+				width: 100%;
+			}
+
+			.trip-info {
+				text-align: right;
+
+				h3 {
+					text-shadow: 0 0 3px #FFF;
+				}
+
+				span {
+					text-shadow: 0 0 5px #003366;
+				}
+			}
+		}
+
+		.widgets {
+			border-right: 1px solid #003366;
+
+			h4 {
+				padding: .5em;
+				border-bottom: 1px solid #003366;
+			}
+		}
+	}
+}
