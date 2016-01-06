@@ -34,16 +34,16 @@
 		<nav id="tripNavigation">
 			<ul aria-label="Pages" class="nav nav-tabs nav-content" role="menubar">
 				<li class='tab <%= tabs.equals("pre") ? "active" : "" %>'>
-					<a href="<%= layout.getFriendlyURL() %>/-/trip/pre" role="menuitem">Home</a>
+					<a href="<%= layout.getFriendlyURL() %>/-/trip/<%= trip.getTripId() %>/pre" role="menuitem">Home</a>
 				</li>
 				<li class='tab <%= tabs.equals("prep") ? "active" : "" %>'>
-					<a href="<%= layout.getFriendlyURL() %>/-/trip/prep" role="menuitem">Prep</a>
+					<a href="<%= layout.getFriendlyURL() %>/-/trip/<%= trip.getTripId() %>/prep" role="menuitem">Prep</a>
 				</li>
 				<li class='tab <%= tabs.equals("post") ? "active" : "" %>'>
-					<a href="<%= layout.getFriendlyURL() %>/-/trip/post" role="menuitem">Post</a>
+					<a href="<%= layout.getFriendlyURL() %>/-/trip/<%= trip.getTripId() %>/post" role="menuitem">Post</a>
 				</li>
 				<li class='tab <%= tabs.equals("edit") ? "active" : "" %>'>
-					<a href="<%= layout.getFriendlyURL() %>/-/trip/edit" role="menuitem">Edit</a>
+					<a href="<%= layout.getFriendlyURL() %>/-/trip/<%= trip.getTripId() %>/edit" role="menuitem">Edit</a>
 				</li>
 			</ul>
 		</nav>

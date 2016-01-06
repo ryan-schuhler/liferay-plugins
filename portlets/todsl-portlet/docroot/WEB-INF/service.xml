@@ -32,6 +32,7 @@
 		<column name="tripLocation" type="String" />
 		<column name="tripStart" type="Date" />
 		<column name="tripTitle" type="String" />
+		<column name="tripTotalCost" type="double" />
 
 		<!-- Table fields -->
 

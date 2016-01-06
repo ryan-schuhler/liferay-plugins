@@ -50,21 +50,15 @@ page import="com.liferay.todsl.service.TripTransportationLocalServiceUtil" %>
 <liferay-theme:defineObjects />
 
 <%
-long tripId = GetterUtil.getLong(portletPreferences.getValue("preferences--tripId--", "0"));
+long tripId = ParamUtil.getLong(request, "tripId");
 
 if (tripId == 0) {
-	tripId = ParamUtil.getLong(request, "tripId");
+	tripId = GetterUtil.getLong(portletPreferences.getValue("preferences--tripId--", "0"));
 }
 
 Trip trip = null;
 
 if (tripId != 0) {
 	trip = TripLocalServiceUtil.fetchTrip(tripId);
-}
-else {
-	String tripName = ParamUtil.getString(request, "tripName");
-
-	System.out.println("Trip Name");
-	System.out.println(tripName);
 }
 %>

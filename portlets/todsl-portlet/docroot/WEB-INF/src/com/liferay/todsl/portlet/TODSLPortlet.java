@@ -153,6 +153,16 @@ public class TODSLPortlet extends MVCPortlet {
 		tripExpense.setExpenseCost(expenseCost);
 
 		TripExpenseLocalServiceUtil.addTripExpense(tripExpense);
+
+		Trip trip = TripLocalServiceUtil.getTrip(tripId);
+
+		double oldTripTotalCost = trip.getTripTotalCost();
+
+		double newTripTotalCost = oldTripTotalCost + expenseCost;
+
+		trip.setTripTotalCost(newTripTotalCost);
+
+		TripLocalServiceUtil.updateTrip(trip);
 	}
 
 	public void addTripGearItem(
@@ -389,6 +399,23 @@ public class TODSLPortlet extends MVCPortlet {
 		long tripExpenseId = ParamUtil.getLong(actionRequest, "tripExpenseId");
 
 		TripExpenseLocalServiceUtil.deleteTripExpense(tripExpenseId);
+
+		TripExpense tripExpense = TripExpenseLocalServiceUtil.getTripExpense(
+			tripExpenseId);
+
+		double expenseCost = tripExpense.getExpenseCost();
+
+		long tripId = ParamUtil.getLong(actionRequest, "tripId");
+
+		Trip trip = TripLocalServiceUtil.getTrip(tripId);
+
+		double oldTripTotalCost = trip.getTripTotalCost();
+
+		double newTripTotalCost = oldTripTotalCost - expenseCost;
+
+		trip.setTripTotalCost(newTripTotalCost);
+
+		TripLocalServiceUtil.updateTrip(trip);
 	}
 
 	public void deleteTripGearItem(

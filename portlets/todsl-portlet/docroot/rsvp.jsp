@@ -35,7 +35,7 @@ Member member = MemberLocalServiceUtil.fetchMember(memberId);
 			inviteeName = inviteByUser.getFullName();
 		}
 
-		String redirect = layout.getFriendlyURL() + "/-/trip/" + tripId;
+		String redirect = layout.getFriendlyURL() + "/-/trip/" + trip.getTripId();
 		%>
 
 		You have been invited by <%= inviteeName %> on a trip to <%= trip.getTripLocation() %>.
@@ -53,7 +53,7 @@ Member member = MemberLocalServiceUtil.fetchMember(memberId);
 					<aui:model-context bean="<%= member %>" model="<%= Member.class %>" />
 
 					<aui:input name="memberId" type="hidden" value="<%= memberId %>" />
-					<aui:input name="tripId" type="hidden" value="<%= tripId %>" />
+					<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
 					<aui:input name="userId" type="hidden" value="<%= user.getUserId() %>" />
 
 					<aui:field-wrapper name="status">
@@ -71,6 +71,6 @@ Member member = MemberLocalServiceUtil.fetchMember(memberId);
 		</c:choose>
 	</c:when>
 	<c:otherwise>
-		Sorry this trip doesn't exist
+		Sorry this trip doesn't exist.
 	</c:otherwise>
 </c:choose>

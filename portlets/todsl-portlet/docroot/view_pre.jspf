@@ -95,7 +95,7 @@
 								<a href="<%= deleteMemberURL %>">Delete</a>
 							</td>
 							<td>
-								<a href="<%= layout.getFriendlyURL() %>/-/trip/rsvp/<%= memberId %>" target="_blank"><%= layout.getRegularURL(request) %>/-/trip/rsvp/<%= memberId %></a>
+								<a href="<%= layout.getFriendlyURL() %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= memberId %>" target="_blank"><%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= memberId %></a>
 							</td>
 						</tr>
 
