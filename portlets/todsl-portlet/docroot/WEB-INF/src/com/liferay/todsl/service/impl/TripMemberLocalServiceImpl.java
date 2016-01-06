@@ -20,37 +20,36 @@ import com.liferay.portal.kernel.dao.orm.Order;
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
-import com.liferay.todsl.model.TripGroupGearItem;
-import com.liferay.todsl.service.TripGroupGearItemLocalServiceUtil;
-import com.liferay.todsl.service.base.TripGroupGearItemLocalServiceBaseImpl;
+import com.liferay.todsl.model.TripMember;
+import com.liferay.todsl.service.TripMemberLocalServiceUtil;
+import com.liferay.todsl.service.base.TripMemberLocalServiceBaseImpl;
 
 import java.util.List;
 
 /**
- * The implementation of the trip group gear item local service.
+ * The implementation of the tripMember local service.
  *
  * <p>
- * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.todsl.service.TripGroupGearItemLocalService} interface.
+ * All custom service methods should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.todsl.service.TripMemberLocalService} interface.
  *
  * <p>
  * This is a local service. Methods of this service will not have security checks based on the propagated JAAS credentials because this service can only be accessed from within the same VM.
  * </p>
  *
  * @author Ryan Schuhler
- * @see com.liferay.todsl.service.base.TripGroupGearItemLocalServiceBaseImpl
- * @see com.liferay.todsl.service.TripGroupGearItemLocalServiceUtil
+ * @see com.liferay.todsl.service.base.TripMemberLocalServiceBaseImpl
+ * @see com.liferay.todsl.service.TripMemberLocalServiceUtil
  */
-public class TripGroupGearItemLocalServiceImpl
-	extends TripGroupGearItemLocalServiceBaseImpl {
+public class TripMemberLocalServiceImpl extends TripMemberLocalServiceBaseImpl {
 	/**
 	 * NOTE FOR DEVELOPERS:
 	 *
-	 * Never reference this interface directly. Always use {@link com.liferay.todsl.service.TripGroupGearItemLocalServiceUtil} to access the trip group gear item local service.
+	 * Never reference this interface directly. Always use {@link com.liferay.todsl.service.TripMemberLocalServiceUtil} to access the tripMember local service.
 	 */
 
-	public List<TripGroupGearItem> getTripGroupGearItems(long tripId) throws Exception {
+	public List<TripMember> getTripMembers(long tripId) throws Exception {
 		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
-			TripGroupGearItem.class);
+			TripMember.class);
 
 		Property tripIdProperty = PropertyFactoryUtil.forName("tripId");
 
@@ -60,9 +59,9 @@ public class TripGroupGearItemLocalServiceImpl
 
 		dynamicQuery.addOrder(order);
 
-		List<TripGroupGearItem> tripGroupGearItems =
-			TripGroupGearItemLocalServiceUtil.dynamicQuery(dynamicQuery);
+		List<TripMember> tripMembers = TripMemberLocalServiceUtil.dynamicQuery(
+			dynamicQuery);
 
-		return tripGroupGearItems;
+		return tripMembers;
 	}
 }

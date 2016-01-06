@@ -3,65 +3,22 @@
 
 <routes>
 	<route>
-		<pattern>/edit</pattern>
-		<implicit-parameter name="tabs">edit</implicit-parameter>
+		<pattern>/{tripId:\d+}</pattern>
 	</route>
-	<route>
-		<pattern>/post</pattern>
-		<implicit-parameter name="tabs">post</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/pre</pattern>
-		<implicit-parameter name="tabs">pre</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/prep</pattern>
-		<implicit-parameter name="tabs">prep</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/rsvp/{memberId:\d+}</pattern>
-		<implicit-parameter name="mvcPath">/rsvp.jsp</implicit-parameter>
-	</route>
-
 	<route>
 		<pattern>/{tripId:\d+}/edit</pattern>
-		<implicit-parameter name="tabs">edit</implicit-parameter>
+		<implicit-parameter name="mvcPath">/edit.jsp</implicit-parameter>
 	</route>
 	<route>
-		<pattern>/{tripId:\d+}/post</pattern>
-		<implicit-parameter name="tabs">post</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/{tripId:\d+}/pre</pattern>
-		<implicit-parameter name="tabs">pre</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/{tripId:\d+}/prep</pattern>
-		<implicit-parameter name="tabs">prep</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/{tripId:\d+}/rsvp/{memberId:\d+}</pattern>
+		<pattern>/{tripId:\d+}/rsvp/{tripMemberId:\d+}</pattern>
 		<implicit-parameter name="mvcPath">/rsvp.jsp</implicit-parameter>
 	</route>
-
 	<route>
 		<pattern>/{tripName}/edit</pattern>
-		<implicit-parameter name="tabs">edit</implicit-parameter>
+		<implicit-parameter name="mvcPath">/edit.jsp</implicit-parameter>
 	</route>
 	<route>
-		<pattern>/{tripName}/post</pattern>
-		<implicit-parameter name="tabs">post</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/{tripName}/pre</pattern>
-		<implicit-parameter name="tabs">pre</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/{tripName}/prep</pattern>
-		<implicit-parameter name="tabs">prep</implicit-parameter>
-	</route>
-	<route>
-		<pattern>/{tripName}/rsvp/{memberId:\d+}</pattern>
+		<pattern>/{tripName}/rsvp/{tripMemberId:\d+}</pattern>
 		<implicit-parameter name="mvcPath">/rsvp.jsp</implicit-parameter>
 	</route>
 </routes>
