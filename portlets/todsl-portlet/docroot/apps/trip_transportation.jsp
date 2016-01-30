@@ -13,26 +13,22 @@
 
 	<%
 	for (TripTransportation tripTransportation : TripTransportationLocalServiceUtil.getTripTransportations(tripId)) {
-
-		long driverId = tripTransportation.getDriverUserId();
-		User driver = null;
-
-		if (driverId != 0) {
-			driver = UserLocalServiceUtil.getUserById(driverId);
-		}
-
 		long tripTransportationId = tripTransportation.getTripTransportationId();
+
+		TripMember driver = TripMemberLocalServiceUtil.fetchTripMember(tripTransportation.getDriverMemberId());
 	%>
 
 		<portlet:actionURL name="claimTripTransportation" var="claimTripTransportationURL">
 			<portlet:param name="claim" value="true" />
 			<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+			<portlet:param name="tripTransportationPassengerMemberId" value="<%= String.valueOf(tripMember.getTripMemberId()) %>" />
 			<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
 		</portlet:actionURL>
 
 		<portlet:actionURL name="claimTripTransportation" var="unclaimTripTransportationURL">
 			<portlet:param name="claim" value="false" />
 			<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+			<portlet:param name="tripTransportationPassengerMemberId" value="<%= String.valueOf(tripMember.getTripMemberId()) %>" />
 			<portlet:param name="tripTransportationId" value="<%= String.valueOf(tripTransportationId) %>" />
 		</portlet:actionURL>
 
@@ -44,7 +40,7 @@
 		<tr>
 			<c:choose>
 				<c:when test="<%= Validator.isNotNull(driver) %>">
-					<td><%= driver.getFullName() %></td>
+					<td><%= driver.getTripMemberName() %></td>
 				</c:when>
 				<c:otherwise>
 					<td>---</td>
@@ -54,19 +50,10 @@
 			<td>
 
 				<%
-				for (String item : StringUtil.split(tripTransportation.getPassengerUserIds())) {
-
-					long transportationUserId = GetterUtil.getLong(item);
-					String transportationUserName = StringPool.BLANK;
-
-					User transportationUser = UserLocalServiceUtil.fetchUserById(transportationUserId);
-
-					if (Validator.isNotNull(transportationUser)) {
-						transportationUserName = transportationUser.getFullName();
-					}
+				for (TripMember passenger : tripTransportation.getTripTransportationTripMembers()) {
 				%>
 
-					<span><%= transportationUserName %></span>
+					<span><%= passenger.getTripMemberName() %></span>
 
 				<%
 				}
@@ -76,13 +63,13 @@
 
 			<td><%= tripTransportation.getCapacity() %></td>
 
-			<td><%= tripTransportation.getCapacity() - tripTransportation.getCount() %></td>
+			<td><%= tripTransportation.getCapacity() - tripTransportation.getTripTransportationTripMembersSize() %></td>
 
 			<td>
-				<c:if test="<%= (tripTransportation.getCapacity() > tripTransportation.getCount()) && !StringUtil.contains(tripTransportation.getPassengerUserIds(), String.valueOf(user.getUserId())) %>">
+				<c:if test="<%= (tripTransportation.getCapacity() > tripTransportation.getTripTransportationTripMembersSize()) && !tripTransportation.hasTripTransportationTripMember(tripMember.getTripMemberId()) %>">
 					<a href="<%= claimTripTransportationURL %>">Claim</a>
 				</c:if>
-				<c:if test="<%= StringUtil.contains(tripTransportation.getPassengerUserIds(), String.valueOf(user.getUserId())) %>">
+				<c:if test="<%= tripTransportation.hasTripTransportationTripMember(tripMember.getTripMemberId()) %>">
 					<a href="<%= unclaimTripTransportationURL %>">Unclaim</a>
 				</c:if>
 				<a href="<%= deleteTripTransportationURL %>">Delete</a>
@@ -100,9 +87,10 @@
 	<form action="<%= addTripTransportationURL %>" method="post">
 		<aui:model-context model="<%= TripTransportation.class %>" />
 		<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+		<aui:input name="tripTransportationDriverMemberId" type="hidden" value="<%= tripMember.getTripMemberId() %>" />
 
 		<tr>
-			<td><%= user.getFullName() %></td>
+			<td><%= tripMember.getTripMemberName() %></td>
 			<td>---</td>
 			<td>
 				<aui:input label="" name="capacity" />

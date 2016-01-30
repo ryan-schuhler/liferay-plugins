@@ -1,3 +1,5 @@
+<%@ page import="com.liferay.todsl.service.TripGearGroupItemLocalServiceUtil" %>
+
 <%@ include file="/init.jsp" %>
 
 <h3>Group Gear</h3>
@@ -19,12 +21,14 @@
 
 		<portlet:actionURL name="claimTripGearGroupItem" var="claimTripGearGroupItemURL">
 			<portlet:param name="claim" value="true" />
+			<portlet:param name="itemClaimTripMemberId" value="<%= String.valueOf(tripMember.getTripMemberId()) %>" />
 			<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 			<portlet:param name="tripGearGroupItemId" value="<%= String.valueOf(tripGearGroupItemId) %>" />
 		</portlet:actionURL>
 
 		<portlet:actionURL name="claimTripGearGroupItem" var="unclaimTripGearGroupItemURL">
 			<portlet:param name="claim" value="false" />
+			<portlet:param name="itemClaimTripMemberId" value="<%= String.valueOf(tripMember.getTripMemberId()) %>" />
 			<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 			<portlet:param name="tripGearGroupItemId" value="<%= String.valueOf(tripGearGroupItemId) %>" />
 		</portlet:actionURL>
@@ -40,32 +44,23 @@
 			<td>
 
 				<%
-				for (String item : StringUtil.split(tripGearGroupItem.getItemClaimUserIds())) {
-
-					long groupGearItemUserId = GetterUtil.getLong(item);
-					String groupGearItemUserName = StringPool.BLANK;
-
-					User groupGearItemUser = UserLocalServiceUtil.fetchUserById(groupGearItemUserId);
-
-					if (Validator.isNotNull(groupGearItemUser)) {
-						groupGearItemUserName = groupGearItemUser.getFullName();
-					}
+				for (TripMember itemClaimTripMember : tripGearGroupItem.getItemClaimTripMembers()) {
 				%>
 
-					<span><%= groupGearItemUserName %></span>
+					<span><%= itemClaimTripMember.getTripMemberName() %></span>
 
 				<%
 				}
 				%>
 
 			</td>
-			<td><%= tripGearGroupItem.getItemQuantity() - tripGearGroupItem.getItemCount() %></td>
+			<td><%= tripGearGroupItem.getItemQuantity() - tripGearGroupItem.getItemClaimTripMembersSize() %></td>
 			<td>
-				<c:if test="<%= (tripGearGroupItem.getItemQuantity() > tripGearGroupItem.getItemCount()) && !StringUtil.contains(tripGearGroupItem.getItemClaimUserIds(), String.valueOf(user.getUserId())) %>">
+				<c:if test="<%= (tripGearGroupItem.getItemQuantity() > tripGearGroupItem.getItemClaimTripMembersSize()) && !tripGearGroupItem.hasItemClaimTripMember(tripMember.getTripMemberId()) %>">
 					<a href="<%= claimTripGearGroupItemURL %>">Claim</a>
 				</c:if>
 
-				<c:if test="<%= StringUtil.contains(tripGearGroupItem.getItemClaimUserIds(), String.valueOf(user.getUserId())) %>">
+				<c:if test="<%= tripGearGroupItem.hasItemClaimTripMember(tripMember.getTripMemberId()) %>">
 					<a href="<%= unclaimTripGearGroupItemURL %>">Unclaim</a>
 				</c:if>
 

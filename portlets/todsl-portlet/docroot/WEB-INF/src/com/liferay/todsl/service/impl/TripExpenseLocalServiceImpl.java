@@ -14,15 +14,9 @@
 
 package com.liferay.todsl.service.impl;
 
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Order;
-import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.todsl.model.TripExpense;
-import com.liferay.todsl.service.TripExpenseLocalServiceUtil;
 import com.liferay.todsl.service.base.TripExpenseLocalServiceBaseImpl;
+import com.liferay.todsl.service.persistence.TripExpenseUtil;
 
 import java.util.List;
 
@@ -48,19 +42,17 @@ public class TripExpenseLocalServiceImpl extends TripExpenseLocalServiceBaseImpl
 	 */
 
 	public List<TripExpense> getTripExpenses(long tripId) throws Exception {
-		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
-			TripExpense.class);
+		List<TripExpense> tripExpenses = TripExpenseUtil.findByTrip(tripId);
 
-		Property tripIdProperty = PropertyFactoryUtil.forName("tripId");
+		return tripExpenses;
+	}
 
-		dynamicQuery.add(tripIdProperty.eq(tripId));
+	public List<TripExpense> getTripExpensesByPayeeMemberId(
+			long tripId, long tripExpensePayeeMemberId)
+		throws Exception {
 
-		Order order = OrderFactoryUtil.asc("createDate");
-
-		dynamicQuery.addOrder(order);
-
-		List<TripExpense> tripExpenses =
-			TripExpenseLocalServiceUtil.dynamicQuery(dynamicQuery);
+		List<TripExpense> tripExpenses = TripExpenseUtil.findByTripMember(
+			tripId, tripExpensePayeeMemberId);
 
 		return tripExpenses;
 	}

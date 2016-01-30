@@ -14,15 +14,9 @@
 
 package com.liferay.todsl.service.impl;
 
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Order;
-import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.todsl.model.TripGearLendingItem;
-import com.liferay.todsl.service.TripGearLendingItemLocalServiceUtil;
 import com.liferay.todsl.service.base.TripGearLendingItemLocalServiceBaseImpl;
+import com.liferay.todsl.service.persistence.TripGearLendingItemUtil;
 
 import java.util.List;
 
@@ -51,20 +45,20 @@ public class TripGearLendingItemLocalServiceImpl
 	public List<TripGearLendingItem> getTripGearLendingItems(long tripId)
 		throws Exception {
 
-		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
-			TripGearLendingItem.class);
-
-		Property tripIdProperty = PropertyFactoryUtil.forName("tripId");
-
-		dynamicQuery.add(tripIdProperty.eq(tripId));
-
-		Order order = OrderFactoryUtil.asc("createDate");
-
-		dynamicQuery.addOrder(order);
-
 		List<TripGearLendingItem> tripGearLendingItems =
-			TripGearLendingItemLocalServiceUtil.dynamicQuery(dynamicQuery);
+			TripGearLendingItemUtil.findByTrip(tripId);
 
 		return tripGearLendingItems;
 	}
+
+	public List<TripGearLendingItem> getTripGearLendingItemsByLenderMemberId(
+			long tripId, long lenderMemberId)
+		throws Exception {
+
+		List<TripGearLendingItem> tripGearLendingItems =
+			TripGearLendingItemUtil.findByTripLender(tripId, lenderMemberId);
+
+		return tripGearLendingItems;
+	}
+
 }

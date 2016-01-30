@@ -7,53 +7,11 @@
 	<%
 	int tripMemberStatus = GetterUtil.getInteger("1");
 
-	for (TripMember tripMember : TripMemberLocalServiceUtil.getTripMembers(tripId, tripMemberStatus)) {
-
-		long tripMemberId = tripMember.getTripMemberId();
-		long tripMemberUserId = tripMember.getTripMemberUserId();
-
-		User user2 = null;
-
-		if (tripMemberUserId != 0) {
-			user2 = UserLocalServiceUtil.getUserById(tripMemberUserId);
-		}
+	for (TripMember member : TripMemberLocalServiceUtil.getTripMembersByStatus(tripId, tripMemberStatus)) {
 	%>
 
-	<portlet:actionURL name="respondToTripMemberInvitation" var="acceptTripMemberInvitationURL">
-		<portlet:param name="tripMemberId" value="<%= String.valueOf(tripMemberId) %>" />
-		<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
-		<portlet:param name="tripMemberStatus" value="1" />
-		<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
-	</portlet:actionURL>
-	<portlet:actionURL name="respondToTripMemberInvitation" var="declineTripMemberInvitationURL">
-		<portlet:param name="tripMemberId" value="<%= String.valueOf(tripMemberId) %>" />
-		<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
-		<portlet:param name="tripMemberStatus" value="2" />
-		<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
-	</portlet:actionURL>
-	<portlet:actionURL name="respondToTripMemberInvitation" var="maybeTripMemberInvitationURL">
-		<portlet:param name="tripMemberId" value="<%= String.valueOf(tripMemberId) %>" />
-		<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
-		<portlet:param name="tripMemberStatus" value="3" />
-		<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
-	</portlet:actionURL>
-	<portlet:actionURL name="deleteTripMember" var="deleteTripMemberURL">
-		<portlet:param name="tripMemberId" value="<%= String.valueOf(tripMemberId) %>" />
-		<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
-	</portlet:actionURL>
-
 	<tr>
-		<td><%= tripMember.getTripMemberName() %></td>
-		<td><input readonly onclick="this.select()" style="box-sizing:border-box; max-width:100px;" value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= tripMemberId %>" /></td>
-		<td>
-			<select onchange="window.location=this.value" style="max-width:100px;">
-				<option value=""></option>
-				<option value="<%= acceptTripMemberInvitationURL %>">Accept</option>
-				<option value="<%= maybeTripMemberInvitationURL %>">Maybe</option>
-				<option value="<%= declineTripMemberInvitationURL %>">Decline</option>
-				<option value="<%= deleteTripMemberURL %>">Delete</option>
-			</select>
-		</td>
+		<td><a href="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>"><%= member.getTripMemberName() %></a></td>
 	</tr>
 
 	<%
@@ -69,21 +27,11 @@
 	<%
 	tripMemberStatus = GetterUtil.getInteger("3");
 
-	for (TripMember tripMember : TripMemberLocalServiceUtil.getTripMembers(tripId, tripMemberStatus)) {
-
-		long tripMemberId = tripMember.getTripMemberId();
-		long tripMemberUserId = tripMember.getTripMemberUserId();
-
-		User user2 = null;
-
-		if (tripMemberUserId != 0) {
-			user2 = UserLocalServiceUtil.getUserById(tripMemberUserId);
-		}
+	for (TripMember member : TripMemberLocalServiceUtil.getTripMembersByStatus(tripId, tripMemberStatus)) {
 	%>
 
 	<tr>
-		<td><%= tripMember.getTripMemberName() %></td>
-		<td><input readonly onclick="this.select()" style="box-sizing:border-box; max-width:100px;" value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= tripMemberId %>" /></td>
+		<td><a href="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>"><%= member.getTripMemberName() %></a></td>
 	</tr>
 
 	<%
@@ -99,21 +47,11 @@
 	<%
 	tripMemberStatus = GetterUtil.getInteger("2");
 
-	for (TripMember tripMember : TripMemberLocalServiceUtil.getTripMembers(tripId, tripMemberStatus)) {
-
-		long tripMemberId = tripMember.getTripMemberId();
-		long tripMemberUserId = tripMember.getTripMemberUserId();
-
-		User user2 = null;
-
-		if (tripMemberUserId != 0) {
-			user2 = UserLocalServiceUtil.getUserById(tripMemberUserId);
-		}
+	for (TripMember member : TripMemberLocalServiceUtil.getTripMembersByStatus(tripId, tripMemberStatus)) {
 	%>
 
 	<tr>
-		<td><%= tripMember.getTripMemberName() %></td>
-		<td><input readonly onclick="this.select()" style="box-sizing:border-box; max-width:100px;" value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= tripMemberId %>" /></td>
+		<td><a href="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>"><%= member.getTripMemberName() %></a></td>
 	</tr>
 
 	<%
@@ -129,21 +67,44 @@
 	<%
 	tripMemberStatus = GetterUtil.getInteger("0");
 
-	for (TripMember tripMember : TripMemberLocalServiceUtil.getTripMembers(tripId, tripMemberStatus)) {
-
-		long tripMemberId = tripMember.getTripMemberId();
-		long tripMemberUserId = tripMember.getTripMemberUserId();
-
-		User user2 = null;
-
-		if (tripMemberUserId != 0) {
-			user2 = UserLocalServiceUtil.getUserById(tripMemberUserId);
-		}
+	for (TripMember member : TripMemberLocalServiceUtil.getTripMembersByStatus(tripId, tripMemberStatus)) {
 	%>
 
+	<portlet:actionURL name="respondToTripMemberInvitation" var="acceptTripMemberInvitationURL">
+		<portlet:param name="tripMemberId" value="<%= String.valueOf(member.getTripMemberId()) %>" />
+		<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+		<portlet:param name="tripMemberStatus" value="1" />
+		<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
+	</portlet:actionURL>
+	<portlet:actionURL name="respondToTripMemberInvitation" var="declineTripMemberInvitationURL">
+		<portlet:param name="tripMemberId" value="<%= String.valueOf(member.getTripMemberId()) %>" />
+		<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+		<portlet:param name="tripMemberStatus" value="2" />
+		<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
+	</portlet:actionURL>
+	<portlet:actionURL name="respondToTripMemberInvitation" var="maybeTripMemberInvitationURL">
+		<portlet:param name="tripMemberId" value="<%= String.valueOf(member.getTripMemberId()) %>" />
+		<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+		<portlet:param name="tripMemberStatus" value="3" />
+		<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
+	</portlet:actionURL>
+	<portlet:actionURL name="deleteTripMember" var="deleteTripMemberURL">
+		<portlet:param name="tripMemberId" value="<%= String.valueOf(member.getTripMemberId()) %>" />
+		<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+	</portlet:actionURL>
+
 	<tr>
-		<td><%= tripMember.getTripMemberName() %></td>
-		<td><input readonly onclick="this.select()" style="box-sizing:border-box; max-width:100px;" value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= tripMemberId %>" /></td>
+		<td><%= member.getTripMemberName() %></td>
+		<td><input readonly onclick="this.select()" style="box-sizing:border-box; max-width:100px;" value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>" /></td>
+		<td>
+			<select onchange="window.location=this.value" style="max-width:100px;">
+				<option value=""></option>
+				<option value="<%= acceptTripMemberInvitationURL %>">Accept</option>
+				<option value="<%= maybeTripMemberInvitationURL %>">Maybe</option>
+				<option value="<%= declineTripMemberInvitationURL %>">Decline</option>
+				<option value="<%= deleteTripMemberURL %>">Delete</option>
+			</select>
+		</td>
 	</tr>
 
 	<%

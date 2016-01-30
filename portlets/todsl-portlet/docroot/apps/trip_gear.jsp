@@ -36,6 +36,7 @@
 	<form action="<%= addTripGearItemURL %>" method="post">
 		<aui:model-context model="<%= TripGearItem.class %>" />
 		<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+
 		<tr>
 			<td>
 				<aui:input label="" name="itemTitle" />

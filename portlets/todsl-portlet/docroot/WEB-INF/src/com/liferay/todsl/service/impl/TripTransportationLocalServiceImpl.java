@@ -14,15 +14,11 @@
 
 package com.liferay.todsl.service.impl;
 
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Order;
-import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.todsl.model.TripMember;
 import com.liferay.todsl.model.TripTransportation;
-import com.liferay.todsl.service.TripTransportationLocalServiceUtil;
 import com.liferay.todsl.service.base.TripTransportationLocalServiceBaseImpl;
+import com.liferay.todsl.service.persistence.TripGearGroupItemUtil;
+import com.liferay.todsl.service.persistence.TripTransportationUtil;
 
 import java.util.List;
 
@@ -51,20 +47,29 @@ public class TripTransportationLocalServiceImpl
 	public List<TripTransportation> getTripTransportations(long tripId)
 		throws Exception {
 
-		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
-			TripTransportation.class);
-
-		Property tripIdProperty = PropertyFactoryUtil.forName("tripId");
-
-		dynamicQuery.add(tripIdProperty.eq(tripId));
-
-		Order order = OrderFactoryUtil.asc("createDate");
-
-		dynamicQuery.addOrder(order);
-
 		List<TripTransportation> tripTransportations =
-			TripTransportationLocalServiceUtil.dynamicQuery(dynamicQuery);
+			TripTransportationUtil.findByTrip(tripId);
 
 		return tripTransportations;
 	}
+
+	public List<TripTransportation> getTripTransportationsByDriverId(
+			long tripId, long driverMemberId)
+		throws Exception {
+
+		List<TripTransportation> tripTransportations =
+			TripTransportationUtil.findByTripDriver(tripId, driverMemberId);
+
+		return tripTransportations;
+	}
+
+	public List<TripMember> getTripTransportationTripMembers(long tripTransportationId)
+			throws Exception {
+
+		List<TripMember> tripMembers =
+			TripTransportationUtil.getTripMembers(tripTransportationId);
+
+		return tripMembers;
+	}
+
 }

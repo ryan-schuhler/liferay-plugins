@@ -17,6 +17,7 @@ package com.liferay.todsl.service.impl;
 import com.liferay.todsl.model.TripMember;
 import com.liferay.todsl.service.base.TripMemberLocalServiceBaseImpl;
 import com.liferay.todsl.service.persistence.TripMemberUtil;
+import com.liferay.todsl.service.persistence.TripPersistence;
 
 import java.util.List;
 
@@ -41,17 +42,47 @@ public class TripMemberLocalServiceImpl extends TripMemberLocalServiceBaseImpl {
 	 * Never reference this interface directly. Always use {@link com.liferay.todsl.service.TripMemberLocalServiceUtil} to access the tripMember local service.
 	 */
 
+	public TripMember getTripMemberByUserId(long tripId, long userId)
+		throws Exception {
+
+		TripMember tripMember = TripMemberUtil.fetchByTripMember_First(
+			tripId, userId, null);
+
+		return tripMember;
+	}
+
 	public List<TripMember> getTripMembers(long tripId) throws Exception {
 		List<TripMember> tripMembers = TripMemberUtil.findByTrip(tripId);
 
 		return tripMembers;
 	}
 
-	public List<TripMember> getTripMembers(long tripId, int tripMemberStatus)
+	public List<TripMember> getTripMembersByInvite(
+			long tripId, int tripMemberInvitedByMemberId)
 		throws Exception {
 
-		List<TripMember> tripMembers = TripMemberUtil.findByTripStatus(tripId, tripMemberStatus);
+		List<TripMember> tripMembers =
+			TripMemberUtil.findByTripInvite(tripId, tripMemberInvitedByMemberId);
 
 		return tripMembers;
 	}
+
+	public List<TripMember> getTripMembersByStatus(
+			long tripId, int tripMemberStatus)
+		throws Exception {
+
+		List<TripMember> tripMembers = TripMemberUtil.findByTripStatus(
+			tripId, tripMemberStatus);
+
+		return tripMembers;
+	}
+
+	public boolean hasTripMember(long tripId, long tripMemberId)
+		throws Exception {
+
+		//Do logic
+
+		return true;
+	}
+
 }

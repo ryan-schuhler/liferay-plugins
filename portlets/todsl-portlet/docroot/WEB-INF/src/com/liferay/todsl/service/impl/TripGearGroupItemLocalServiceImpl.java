@@ -14,15 +14,11 @@
 
 package com.liferay.todsl.service.impl;
 
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Order;
-import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.todsl.model.TripGearGroupItem;
-import com.liferay.todsl.service.TripGearGroupItemLocalServiceUtil;
 import com.liferay.todsl.service.base.TripGearGroupItemLocalServiceBaseImpl;
+import com.liferay.todsl.service.persistence.TripGearGroupItemPersistence;
+import com.liferay.todsl.service.persistence.TripGearGroupItemUtil;
+import com.liferay.todsl.model.TripMember;
 
 import java.util.List;
 
@@ -48,21 +44,23 @@ public class TripGearGroupItemLocalServiceImpl
 	 * Never reference this interface directly. Always use {@link com.liferay.todsl.service.TripGearGroupItemLocalServiceUtil} to access the trip group gear item local service.
 	 */
 
-	public List<TripGearGroupItem> getTripGearGroupItems(long tripId) throws Exception {
-		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
-			TripGearGroupItem.class);
-
-		Property tripIdProperty = PropertyFactoryUtil.forName("tripId");
-
-		dynamicQuery.add(tripIdProperty.eq(tripId));
-
-		Order order = OrderFactoryUtil.asc("createDate");
-
-		dynamicQuery.addOrder(order);
+	public List<TripGearGroupItem> getTripGearGroupItems(long tripId)
+		throws Exception {
 
 		List<TripGearGroupItem> tripGearGroupItems =
-			TripGearGroupItemLocalServiceUtil.dynamicQuery(dynamicQuery);
+			TripGearGroupItemUtil.findByTrip(tripId);
 
 		return tripGearGroupItems;
 	}
+
+	public List<TripMember> getItemClaimTripMembers(long tripGearGroupItemId)
+			throws Exception {
+
+		List<TripMember> tripMembers =
+			TripGearGroupItemUtil.getTripMembers(tripGearGroupItemId);
+
+		return tripMembers;
+	}
+
+
 }

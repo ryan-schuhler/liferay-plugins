@@ -18,7 +18,7 @@
 
 <c:choose>
 	<c:when test="<%= themeDisplay.isSignedIn() && Validator.isNotNull(trip) %>">
-		<liferay-ui:success key="updateTripSuccess" message='Success! Your new trip id is:' />
+		<liferay-ui:success key="updateTripSuccess" message="Success! Your new trip id is:" />
 		<liferay-ui:error key="updateTripError" message="Sorry, something went wrong and we couldn't update your trip." />
 
 		<div class="max-full edit-trip">
@@ -40,7 +40,7 @@
 					<aui:input name="tripTitle" />
 					<aui:input name="tripImage" />
 					<aui:input name="tripHost" />
-					<aui:input name="tripDescription" />
+					<aui:input name="tripDescription" type="textarea" />
 					<aui:input name="tripFriendlyUrl" />
 					<aui:input name="tripCostEstimate" />
 					<aui:input name="tripStart" />
@@ -64,7 +64,7 @@
 		</div>
 	</c:when>
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
-		Sorry this trip doesn't exist. <a href="<%=baseURL %>/create">Create</a> a new one.
+		Sorry this trip doesn't exist. <a href="<%= baseURL %>/create">Create</a> a new one.
 	</c:when>
 	<c:otherwise>
 		Please <a href="<%= themeDisplay.getURLSignIn() %>">Sign In</a> to edit this trip.

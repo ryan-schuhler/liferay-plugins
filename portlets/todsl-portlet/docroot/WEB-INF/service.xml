@@ -46,6 +46,15 @@
 		<column name="displayTripMap" type="boolean" />
 		<column name="displayTripTransportation" type="boolean" />
 		<column name="displayTripWeather" type="boolean" />
+
+		<!-- Relational fields -->
+
+		<column name="tripExpenses" entity="TripExpense" mapping-table="Trip_TripExpense" type="Collection" />
+		<column name="tripGearGroupItems" entity="TripGearGroupItem" mapping-table="Trip_TripGearGroupItem" type="Collection" />
+		<column name="tripGearItems" entity="TripGearItem" mapping-table="Trip_TripGearItem" type="Collection" />
+		<column name="tripGearLendingItems" entity="TripGearLendingItem" mapping-table="Trip_TripGearLendingItem" type="Collection" />
+		<column name="tripMembers" entity="TripMember" mapping-table="Trip_TripMember" type="Collection" />
+		<column name="tripTransportations" entity="TripTransportation" mapping-table="Trip_TripTransportation" type="Collection" />
 	</entity>
 	<entity name="TripExpense" local-service="true" remote-service="true">
 
@@ -67,14 +76,23 @@
 
 		<!-- Other fields -->
 
-		<column name="expenseCost" type="double" />
-		<column name="expensePayeeUserId" type="long" />
-		<column name="expenseTitle" type="String" />
+		<column name="tripExpenseCost" type="double" />
+		<column name="tripExpensePayeeMemberId" type="long" />
+		<column name="tripExpenseTitle" type="String" />
+
+		<!-- Relational fields -->
+
+		<column name="trips" entity="Trip" mapping-table="Trip_TripExpense" type="Collection" />
 
 		<!-- Finder methods -->
 
 		<finder name="Trip" return-type="Collection">
 			<finder-column name="tripId"></finder-column>
+		</finder>
+
+		<finder name="TripMember" return-type="Collection">
+			<finder-column name="tripId"></finder-column>
+			<finder-column name="tripExpensePayeeMemberId"></finder-column>
 		</finder>
 	</entity>
 	<entity name="TripGearItem" local-service="true" remote-service="true">
@@ -101,10 +119,19 @@
 		<column name="itemRequired" type="boolean" />
 		<column name="itemTitle" type="String" />
 
+		<!-- Relational fields -->
+
+		<column name="trips" entity="Trip" mapping-table="Trip_TripGearItem" type="Collection" />
+
 		<!-- Finder methods -->
 
 		<finder name="Trip" return-type="Collection">
 			<finder-column name="tripId"></finder-column>
+		</finder>
+
+		<finder name="TripRequired" return-type="Collection">
+			<finder-column name="tripId"></finder-column>
+			<finder-column name="itemRequired"></finder-column>
 		</finder>
 	</entity>
 	<entity name="TripGearGroupItem" local-service="true" remote-service="true">
@@ -128,11 +155,14 @@
 		<!-- Other fields -->
 
 		<column name="itemCategory" type="String" />
-		<column name="itemClaimUserIds" type="String" />
-		<column name="itemCount" type="int" />
 		<column name="itemQuantity" type="int" />
 		<column name="itemRequired" type="boolean" />
 		<column name="itemTitle" type="String" />
+
+		<!-- Relational fields -->
+
+		<column name="itemClaimTripMembers" entity="TripMember" mapping-table="TripMember_TripGearGroupItem" type="Collection" />
+		<column name="trips" entity="Trip" mapping-table="Trip_TripGearGroupItem" type="Collection" />
 
 		<!-- Finder methods -->
 
@@ -160,14 +190,28 @@
 
 		<!-- Other fields -->
 
-		<column name="borrowerUserId" type="long" />
-		<column name="lenderUserId" type="long" />
+		<column name="itemBorrowerMemberId" type="long" />
+		<column name="itemLenderMemberId" type="long" />
 		<column name="itemTitle" type="String" />
+
+		<!-- Relational fields -->
+
+		<column name="trips" entity="Trip" mapping-table="Trip_TripGearLendingItem" type="Collection" />
 
 		<!-- Finder methods -->
 
 		<finder name="Trip" return-type="Collection">
 			<finder-column name="tripId"></finder-column>
+		</finder>
+
+		<finder name="TripBorrower" return-type="Collection">
+			<finder-column name="tripId"></finder-column>
+			<finder-column name="itemBorrowerMemberId"></finder-column>
+		</finder>
+
+		<finder name="TripLender" return-type="Collection">
+			<finder-column name="tripId"></finder-column>
+			<finder-column name="itemLenderMemberId"></finder-column>
 		</finder>
 	</entity>
 	<entity name="TripMember" local-service="true" remote-service="true">
@@ -190,20 +234,42 @@
 
 		<!-- Other fields -->
 
-		<column name="tripMemberInvitedByUserId" type="long" />
+		<column name="tripMemberInvitedByMemberId" type="long" />
 		<column name="tripMemberEmail" type="String" />
 		<column name="tripMemberName" type="String" />
 		<column name="tripMemberUserId" type="long" />
 		<column name="tripMemberStatus" type="int" />
+		<column name="tripMemberTotalExpenses" type="double" />
+
+		<!-- Relational fields -->
+
+		<column name="trips" entity="Trip" mapping-table="Trip_TripMember" type="Collection" />
+		<column name="tripTransportations" entity="TripTransportation" mapping-table="TripMember_TripTransportation" type="Collection" />
+		<column name="tripGearGroupItems" entity="TripGearGroupItem" mapping-table="TripMember_TripGearGroupItem" type="Collection" />
 
 		<!-- Finder methods -->
 
 		<finder name="Trip" return-type="Collection">
 			<finder-column name="tripId"></finder-column>
 		</finder>
+		<finder name="TripInvite" return-type="Collection">
+			<finder-column name="tripId"></finder-column>
+			<finder-column name="tripMemberInvitedByMemberId"></finder-column>
+		</finder>
+		<finder name="TripMember" return-type="Collection">
+			<finder-column name="tripId"></finder-column>
+			<finder-column name="tripMemberUserId"></finder-column>
+		</finder>
+		<finder name="TripMemberEmail" return-type="Collection">
+			<finder-column name="tripId"></finder-column>
+			<finder-column name="tripMemberEmail"></finder-column>
+		</finder>
 		<finder name="TripStatus" return-type="Collection">
 			<finder-column name="tripId"></finder-column>
 			<finder-column name="tripMemberStatus"></finder-column>
+		</finder>
+		<finder name="User" return-type="Collection">
+			<finder-column name="userId"></finder-column>
 		</finder>
 	</entity>
 	<entity name="TripTransportation" local-service="true" remote-service="true">
@@ -226,15 +292,23 @@
 
 		<!-- Other fields -->
 
-		<column name="driverUserId" type="long" />
-		<column name="passengerUserIds" type="String" />
 		<column name="capacity" type="int" />
-		<column name="count" type="int" />
+		<column name="driverMemberId" type="long" />
+
+		<!-- Relational fields -->
+
+		<column name="trips" entity="Trip" mapping-table="Trip_TripTransportation" type="Collection" />
+		<column name="tripMembers" entity="TripMember" mapping-table="TripMember_TripTransportation" type="Collection" />
 
 		<!-- Finder methods -->
 
 		<finder name="Trip" return-type="Collection">
 			<finder-column name="tripId"></finder-column>
+		</finder>
+
+		<finder name="TripDriver" return-type="Collection">
+			<finder-column name="tripId"></finder-column>
+			<finder-column name="driverMemberId"></finder-column>
 		</finder>
 	</entity>
 </service-builder>

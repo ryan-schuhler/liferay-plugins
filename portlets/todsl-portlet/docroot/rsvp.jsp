@@ -19,17 +19,17 @@
 <%
 long tripMemberId = ParamUtil.getLong(request, "tripMemberId");
 
-TripMember tripMember = TripMemberLocalServiceUtil.fetchTripMember(tripMemberId);
+TripMember rsvpTripMember = TripMemberLocalServiceUtil.fetchTripMember(tripMemberId);
 %>
 
 <c:choose>
-	<c:when test="<%= Validator.isNotNull(trip) && Validator.isNotNull(tripMember) %>">
+	<c:when test="<%= Validator.isNotNull(trip) && Validator.isNotNull(rsvpTripMember) %>">
 
 		<%
-		long tripMemberInvitedByUserId = tripMember.getTripMemberInvitedByUserId();
+		long tripMemberInvitedByMemberId = rsvpTripMember.getTripMemberInvitedByMemberId();
 		String inviteeName = StringPool.BLANK;
 
-		User tripMemberInvitedByUser = UserLocalServiceUtil.fetchUserById(tripMemberInvitedByUserId);
+		User tripMemberInvitedByUser = UserLocalServiceUtil.fetchUserById(tripMemberInvitedByMemberId);
 
 		if (Validator.isNotNull(tripMemberInvitedByUser)) {
 			inviteeName = tripMemberInvitedByUser.getFullName();
@@ -50,7 +50,7 @@ TripMember tripMember = TripMemberLocalServiceUtil.fetchTripMember(tripMemberId)
 
 				<form action="<%= respondToTripMemberInvitationURL %>" method="post">
 
-					<aui:model-context bean="<%= tripMember %>" model="<%= TripMember.class %>" />
+					<aui:model-context bean="<%= rsvpTripMember %>" model="<%= TripMember.class %>" />
 
 					<aui:input name="tripMemberId" type="hidden" value="<%= tripMemberId %>" />
 					<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />

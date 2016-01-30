@@ -14,15 +14,9 @@
 
 package com.liferay.todsl.service.impl;
 
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Order;
-import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.Property;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.todsl.model.TripGearItem;
-import com.liferay.todsl.service.TripGearItemLocalServiceUtil;
 import com.liferay.todsl.service.base.TripGearItemLocalServiceBaseImpl;
+import com.liferay.todsl.service.persistence.TripGearItemUtil;
 
 import java.util.List;
 
@@ -49,20 +43,9 @@ public class TripGearItemLocalServiceImpl
 	 */
 
 	public List<TripGearItem> getTripGearItems(long tripId) throws Exception {
-		DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(
-			TripGearItem.class);
-
-		Property tripIdProperty = PropertyFactoryUtil.forName("tripId");
-
-		dynamicQuery.add(tripIdProperty.eq(tripId));
-
-		Order order = OrderFactoryUtil.asc("createDate");
-
-		dynamicQuery.addOrder(order);
-
-		List<TripGearItem> tripGearItems =
-			TripGearItemLocalServiceUtil.dynamicQuery(dynamicQuery);
+		List<TripGearItem> tripGearItems = TripGearItemUtil.findByTrip(tripId);
 
 		return tripGearItems;
 	}
+
 }

@@ -6,38 +6,26 @@
 	<tr>
 		<th>Title</th>
 		<th>Lender</th>
-		<th>Borrower</th>
+		<th>ItemBorrower</th>
 		<th>Options</th>
 	</tr>
 
 	<%
 	for (TripGearLendingItem tripGearLendingItem : TripGearLendingItemLocalServiceUtil.getTripGearLendingItems(tripId)) {
-
-		long borrowerId = tripGearLendingItem.getBorrowerUserId();
-		User borrower = null;
-
-		if (borrowerId != 0) {
-			borrower = UserLocalServiceUtil.getUserById(borrowerId);
-		}
-
-		long lenderId = tripGearLendingItem.getLenderUserId();
-		User lender = null;
-
-		if (lenderId != 0) {
-			lender = UserLocalServiceUtil.getUserById(lenderId);
-		}
-
 		long tripGearLendingItemId = tripGearLendingItem.getTripGearLendingItemId();
+
+		TripMember borrower = TripMemberLocalServiceUtil.fetchTripMember(tripGearLendingItem.getItemBorrowerMemberId());
+		TripMember lender = TripMemberLocalServiceUtil.fetchTripMember(tripGearLendingItem.getItemLenderMemberId());
 	%>
 
 		<portlet:actionURL name="claimTripGearLendingItem" var="claimTripGearLendingItemURL">
-			<portlet:param name="claim" value="true" />
+			<portlet:param name="itemBorrowerMemberId" value="<%= String.valueOf(tripMember.getTripMemberId()) %>" />
 			<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 			<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
 		</portlet:actionURL>
 
 		<portlet:actionURL name="claimTripGearLendingItem" var="unclaimTripGearLendingItemURL">
-			<portlet:param name="claim" value="false" />
+			<portlet:param name="itemBorrowerMemberId" value="0" />
 			<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
 			<portlet:param name="tripGearLendingItemId" value="<%= String.valueOf(tripGearLendingItemId) %>" />
 		</portlet:actionURL>
@@ -49,11 +37,16 @@
 
 		<tr>
 			<td><%= tripGearLendingItem.getItemTitle() %></td>
-			<td><%= lender.getFullName() %></td>
+
+			<td>
+				<c:if test="<%= Validator.isNotNull(lender) %>">
+					<%= lender.getTripMemberName() %>
+				</c:if>
+			</td>
 
 			<c:choose>
 				<c:when test="<%= Validator.isNotNull(borrower) %>">
-					<td><%= borrower.getFullName() %></td>
+					<td><%= borrower.getTripMemberName() %></td>
 					<td><a href="<%= unclaimTripGearLendingItemURL %>">Unclaim</a>
 				</c:when>
 				<c:otherwise>
@@ -76,11 +69,13 @@
 	<form action="<%= addTripGearLendingItemURL %>" method="post">
 		<aui:model-context model="<%= TripGearLendingItem.class %>" />
 		<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+		<aui:input name="itemLenderMemberId" type="hidden" value="<%= tripMember.getTripMemberId() %>" />
+
 		<tr>
 			<td>
 				<aui:input label="" name="itemTitle" />
 			</td>
-			<td><%= user.getFullName() %></td>
+			<td><%= tripMember.getTripMemberName() %></td>
 			<td>---</td>
 			<td>
 				<aui:button type="submit" value="Add Item" />

@@ -68,4 +68,8 @@ Trip trip = null;
 if (tripId != 0) {
 	trip = TripLocalServiceUtil.fetchTrip(tripId);
 }
+
+long userId = user.getUserId();
+
+TripMember tripMember = TripMemberLocalServiceUtil.getTripMemberByUserId(tripId, userId);
 %>

@@ -45,7 +45,7 @@ String appFile = "/apps/" + appName + ".jsp";
 		</div>
 	</c:when>
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
-		Sorry this trip doesn't exist. Create one <a href="<%= baseURL %>/create">here</a>.
+		Sorry this trip doesn't exist. Create one <a href="<%= baseURL %>create">here</a>.
 	</c:when>
 	<c:otherwise>
 		Please <a href="<%= themeDisplay.getURLSignIn() %>">Sign In</a> to view this trip.

@@ -4,7 +4,7 @@
 	<c:when test="<%= themeDisplay.isSignedIn() %>">
 		<h3>Create a trip</h3>
 
-		<liferay-ui:success key="createTripSuccess" message='Success! Your new trip id is: ' />
+		<liferay-ui:success key="createTripSuccess" message="Success! Your new trip id is: " />
 		<liferay-ui:error key="createTripError" message="Sorry, something went wrong and we couldn't create your trip." />
 
 		<portlet:actionURL name="addTrip" var="addTripURL">

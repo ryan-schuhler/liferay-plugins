@@ -12,15 +12,11 @@
 
 	<%
 	for (TripExpense tripExpense : TripExpenseLocalServiceUtil.getTripExpenses(tripId)) {
-
-		long expensePayeeId = tripExpense.getExpensePayeeUserId();
-		User expensePayee = null;
-
-		if (expensePayeeId != 0) {
-			expensePayee = UserLocalServiceUtil.getUserById(expensePayeeId);
-		}
-
 		long tripExpenseId = tripExpense.getTripExpenseId();
+
+		long tripExpensePayeeMemberId = tripExpense.getTripExpensePayeeMemberId();
+
+		TripMember tripExpensePayeeMember = TripMemberLocalServiceUtil.fetchTripMember(tripExpensePayeeMemberId);
 	%>
 
 		<portlet:actionURL name="deleteTripExpense" var="deleteTripExpenseURL">
@@ -30,9 +26,13 @@
 		</portlet:actionURL>
 
 		<tr>
-			<td><%= tripExpense.getExpenseTitle() %></td>
-			<td><%= tripExpense.getExpenseCost() %></td>
-			<td><%= expensePayee.getFullName() %></td>
+			<td><%= tripExpense.getTripExpenseTitle() %></td>
+			<td><%= tripExpense.getTripExpenseCost() %></td>
+			<td>
+				<c:if test="<%= Validator.isNotNull(tripExpensePayeeMember) %>">
+					<%= tripExpensePayeeMember.getTripMemberName() %>
+				</c:if>
+			</td>
 			<td><a href="<%= deleteTripExpenseURL %>">Delete</a></td>
 		</tr>
 
@@ -47,15 +47,16 @@
 	<form action="<%= addTripExpenseURL %>" method="post">
 		<aui:model-context model="<%= TripExpense.class %>" />
 		<aui:input name="tripId" type="hidden" value="<%= trip.getTripId() %>" />
+		<aui:input name="tripExpensePayeeMemberId" type="hidden" value="<%= tripMember.getTripMemberId() %>" />
 
 		<tr>
 			<td>
-				<aui:input label="" name="expenseTitle" />
+				<aui:input label="" name="tripExpenseTitle" />
 			</td>
 			<td>
-				<aui:input label="" name="expenseCost" />
+				<aui:input label="" name="tripExpenseCost" />
 			</td>
-			<td><%= user.getFullName() %></td>
+			<td><%= tripMember.getTripMemberName() %></td>
 			<td>
 				<aui:button type="submit" value="Add Expense" />
 			</td>
