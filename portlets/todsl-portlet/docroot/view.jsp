@@ -51,3 +51,7 @@ String appFile = "/apps/" + appName + ".jsp";
 		Please <a href="<%= themeDisplay.getURLSignIn() %>">Sign In</a> to view this trip.
 	</c:otherwise>
 </c:choose>
+
+<style type="text/css">
+	<%= trip.getTripCss() %>
+</style>

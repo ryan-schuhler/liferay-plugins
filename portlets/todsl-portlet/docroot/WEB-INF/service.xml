@@ -25,17 +25,18 @@
 
 		<column name="tripCapacity" type="int" />
 		<column name="tripCostEstimate" type="String" />
+		<column name="tripCss" type="String" />
 		<column name="tripDescription" type="String" />
 		<column name="tripEnd" type="Date" />
 		<column name="tripFriendlyUrl" type="String" />
 		<column name="tripHost" type="String" />
 		<column name="tripImage" type="String" />
 		<column name="tripLocation" type="String" />
+		<column name="tripPayPalEmail" type="String" />
 		<column name="tripStart" type="Date" />
 		<column name="tripTitle" type="String" />
-		<column name="tripTotalCost" type="double" />
 
-		<!-- Table fields -->
+		<!-- Display fields -->
 
 		<column name="displayTripCountdown" type="boolean" />
 		<column name="displayTripDiscussion" type="boolean" />
@@ -44,6 +45,7 @@
 		<column name="displayTripGearGroupItems" type="boolean" />
 		<column name="displayTripGearLendingItems" type="boolean" />
 		<column name="displayTripMap" type="boolean" />
+		<column name="displayTripPayment" type="boolean" />
 		<column name="displayTripTransportation" type="boolean" />
 		<column name="displayTripWeather" type="boolean" />
 
@@ -234,6 +236,7 @@
 
 		<!-- Other fields -->
 
+		<column name="tripMemberAdmin" type="boolean" />
 		<column name="tripMemberInvitedByMemberId" type="long" />
 		<column name="tripMemberEmail" type="String" />
 		<column name="tripMemberName" type="String" />

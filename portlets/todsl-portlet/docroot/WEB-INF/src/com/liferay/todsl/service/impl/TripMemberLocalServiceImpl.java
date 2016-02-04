@@ -17,7 +17,6 @@ package com.liferay.todsl.service.impl;
 import com.liferay.todsl.model.TripMember;
 import com.liferay.todsl.service.base.TripMemberLocalServiceBaseImpl;
 import com.liferay.todsl.service.persistence.TripMemberUtil;
-import com.liferay.todsl.service.persistence.TripPersistence;
 
 import java.util.List;
 
@@ -41,6 +40,14 @@ public class TripMemberLocalServiceImpl extends TripMemberLocalServiceBaseImpl {
 	 *
 	 * Never reference this interface directly. Always use {@link com.liferay.todsl.service.TripMemberLocalServiceUtil} to access the tripMember local service.
 	 */
+
+	public int countByTripStatus(long tripId, int tripMemberStatus)
+		throws Exception {
+
+		int count = TripMemberUtil.countByTripStatus(tripId, tripMemberStatus);
+
+		return count;
+	}
 
 	public TripMember getTripMemberByUserId(long tripId, long userId)
 		throws Exception {
@@ -76,13 +83,4 @@ public class TripMemberLocalServiceImpl extends TripMemberLocalServiceBaseImpl {
 
 		return tripMembers;
 	}
-
-	public boolean hasTripMember(long tripId, long tripMemberId)
-		throws Exception {
-
-		//Do logic
-
-		return true;
-	}
-
 }

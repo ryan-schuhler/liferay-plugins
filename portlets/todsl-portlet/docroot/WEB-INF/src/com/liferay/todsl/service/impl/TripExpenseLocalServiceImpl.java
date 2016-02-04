@@ -14,7 +14,10 @@
 
 package com.liferay.todsl.service.impl;
 
+import com.liferay.todsl.model.Trip;
 import com.liferay.todsl.model.TripExpense;
+import com.liferay.todsl.service.TripExpenseLocalServiceUtil;
+import com.liferay.todsl.service.TripLocalServiceUtil;
 import com.liferay.todsl.service.base.TripExpenseLocalServiceBaseImpl;
 import com.liferay.todsl.service.persistence.TripExpenseUtil;
 
@@ -56,4 +59,35 @@ public class TripExpenseLocalServiceImpl extends TripExpenseLocalServiceBaseImpl
 
 		return tripExpenses;
 	}
+
+	public double getTripExpensesTotal(long tripId)
+		throws Exception {
+
+		List<TripExpense> tripExpenses = TripExpenseUtil.findByTrip(tripId);
+
+		double tripExpenseTotal = 0;
+
+		for (TripExpense tripExpense : tripExpenses) {
+			tripExpenseTotal += tripExpense.getTripExpenseCost();
+		}
+
+		return tripExpenseTotal;
+	}
+
+	public double getTripExpensesTotalByMemberId(
+			long tripId, long tripExpensePayeeMemberId)
+		throws Exception {
+
+		List<TripExpense> tripExpenses =
+			TripExpenseUtil.findByTripMember(tripId, tripExpensePayeeMemberId);
+
+		double tripExpenseTotal = 0;
+
+		for (TripExpense tripExpense : tripExpenses) {
+			tripExpenseTotal += tripExpense.getTripExpenseCost();
+		}
+
+		return tripExpenseTotal;
+	}
+
 }

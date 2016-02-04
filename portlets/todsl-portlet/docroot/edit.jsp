@@ -47,6 +47,7 @@
 					<aui:input name="tripEnd" />
 					<aui:input name="tripLocation" />
 					<aui:input name="tripCapacity" />
+					<aui:input name="tripPayPalEmail" />
 
 					<aui:input name="displayTripCountdown" />
 					<aui:input name="displayTripDiscussion" />
@@ -55,8 +56,11 @@
 					<aui:input name="displayTripGearGroupItems" />
 					<aui:input name="displayTripGearLendingItems" />
 					<aui:input name="displayTripMap" />
+					<aui:input name="displayTripPayment" />
 					<aui:input name="displayTripTransportation" />
 					<aui:input name="displayTripWeather" />
+
+					<aui:input name="tripCss" type="textarea" />
 
 					<aui:button type="submit" value="Submit" />
 				</aui:form>

@@ -15,10 +15,9 @@
 package com.liferay.todsl.service.impl;
 
 import com.liferay.todsl.model.TripGearGroupItem;
-import com.liferay.todsl.service.base.TripGearGroupItemLocalServiceBaseImpl;
-import com.liferay.todsl.service.persistence.TripGearGroupItemPersistence;
-import com.liferay.todsl.service.persistence.TripGearGroupItemUtil;
 import com.liferay.todsl.model.TripMember;
+import com.liferay.todsl.service.base.TripGearGroupItemLocalServiceBaseImpl;
+import com.liferay.todsl.service.persistence.TripGearGroupItemUtil;
 
 import java.util.List;
 
@@ -38,6 +37,15 @@ import java.util.List;
  */
 public class TripGearGroupItemLocalServiceImpl
 	extends TripGearGroupItemLocalServiceBaseImpl {
+	public List<TripMember> getItemClaimTripMembers(long tripGearGroupItemId)
+			throws Exception {
+
+		List<TripMember> tripMembers = TripGearGroupItemUtil.getTripMembers(
+			tripGearGroupItemId);
+
+		return tripMembers;
+	}
+
 	/**
 	 * NOTE FOR DEVELOPERS:
 	 *
@@ -52,15 +60,5 @@ public class TripGearGroupItemLocalServiceImpl
 
 		return tripGearGroupItems;
 	}
-
-	public List<TripMember> getItemClaimTripMembers(long tripGearGroupItemId)
-			throws Exception {
-
-		List<TripMember> tripMembers =
-			TripGearGroupItemUtil.getTripMembers(tripGearGroupItemId);
-
-		return tripMembers;
-	}
-
 
 }

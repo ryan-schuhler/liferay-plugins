@@ -38,6 +38,7 @@ page import="com.liferay.todsl.model.TripGearItem" %><%@
 page import="com.liferay.todsl.model.TripGearLendingItem" %><%@
 page import="com.liferay.todsl.model.TripMember" %><%@
 page import="com.liferay.todsl.model.TripTransportation" %><%@
+page import="com.liferay.todsl.service.persistence.TripUtil" %><%@
 page import="com.liferay.todsl.service.TripExpenseLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripGearGroupItemLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripGearItemLocalServiceUtil" %><%@

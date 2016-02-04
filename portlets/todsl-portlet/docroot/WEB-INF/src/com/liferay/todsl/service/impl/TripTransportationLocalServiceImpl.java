@@ -17,7 +17,6 @@ package com.liferay.todsl.service.impl;
 import com.liferay.todsl.model.TripMember;
 import com.liferay.todsl.model.TripTransportation;
 import com.liferay.todsl.service.base.TripTransportationLocalServiceBaseImpl;
-import com.liferay.todsl.service.persistence.TripGearGroupItemUtil;
 import com.liferay.todsl.service.persistence.TripTransportationUtil;
 
 import java.util.List;
@@ -66,8 +65,8 @@ public class TripTransportationLocalServiceImpl
 	public List<TripMember> getTripTransportationTripMembers(long tripTransportationId)
 			throws Exception {
 
-		List<TripMember> tripMembers =
-			TripTransportationUtil.getTripMembers(tripTransportationId);
+		List<TripMember> tripMembers = TripTransportationUtil.getTripMembers(
+			tripTransportationId);
 
 		return tripMembers;
 	}

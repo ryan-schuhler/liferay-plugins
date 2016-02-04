@@ -131,8 +131,6 @@ public class TODSLPortlet extends MVCPortlet {
 		tripExpense.setTripExpenseTitle(tripExpenseTitle);
 
 		TripExpenseLocalServiceUtil.addTripExpense(tripExpense);
-
-		calculateTripCost(tripId);
 	}
 
 	public void addTripGearGroupItem(
@@ -280,8 +278,7 @@ public class TODSLPortlet extends MVCPortlet {
 		message.append(tripMemberId);
 		message.append("'>here</a>.");
 
-//		sendEmail(invitee.getTripMemberEmail(),
-//			invitee.getTripMemberName(), tripMemberEmail, subject.toString(), message.toString());
+		sendEmail(tripMemberEmail, subject.toString(), message.toString());
 	}
 
 	public void addTripTransportation(
@@ -335,23 +332,6 @@ public class TODSLPortlet extends MVCPortlet {
 		tripMember.setTripMemberTotalExpenses(memberTotalExpenses);
 
 		TripMemberLocalServiceUtil.updateTripMember(tripMember);
-	}
-
-	public void calculateTripCost(long tripId) throws Exception {
-		List<TripExpense> tripExpenses =
-			TripExpenseLocalServiceUtil.getTripExpenses(tripId);
-
-		double tripTotalCost = 0;
-
-		for (TripExpense tripExpense : tripExpenses) {
-			tripTotalCost += tripExpense.getTripExpenseCost();
-		}
-
-		Trip trip = TripLocalServiceUtil.getTrip(tripId);
-
-		trip.setTripTotalCost(tripTotalCost);
-
-		TripLocalServiceUtil.updateTrip(trip);
 	}
 
 	public void claimTripGearGroupItem(
@@ -428,10 +408,6 @@ public class TODSLPortlet extends MVCPortlet {
 		long tripExpenseId = ParamUtil.getLong(actionRequest, "tripExpenseId");
 
 		TripExpenseLocalServiceUtil.deleteTripExpense(tripExpenseId);
-
-		long tripId = ParamUtil.getLong(actionRequest, "tripId");
-
-		calculateTripCost(tripId);
 	}
 
 	public void deleteTripGearGroupItem(
@@ -507,14 +483,12 @@ public class TODSLPortlet extends MVCPortlet {
 		TripMemberLocalServiceUtil.updateTripMember(tripMember);
 	}
 
-	public void sendEmail(
-			String fromAddress, String fromName, String toAddress,
-			String subject, String message)
+	public void sendEmail(String toAddress, String subject, String message)
 		throws Exception {
 
 		try {
 			InternetAddress fromInternetAddress = new InternetAddress(
-				fromAddress, fromName);
+				"no-reply@theoutdoors.life", "The Outdoors Life");
 
 			InternetAddress toInternetAddress = new InternetAddress(toAddress);
 
@@ -555,6 +529,8 @@ public class TODSLPortlet extends MVCPortlet {
 				actionRequest, "displayTripGearGroupItems");
 			boolean displayTripMap = ParamUtil.getBoolean(
 				actionRequest, "displayTripMap");
+			boolean displayTripPayment = ParamUtil.getBoolean(
+					actionRequest, "displayTripPayment");
 			boolean displayTripTransportation = ParamUtil.getBoolean(
 				actionRequest, "displayTripTransportation");
 			boolean displayTripWeather = ParamUtil.getBoolean(
@@ -563,6 +539,8 @@ public class TODSLPortlet extends MVCPortlet {
 				actionRequest, "tripCapacity");
 			String tripCostEstimate = ParamUtil.getString(
 				actionRequest, "tripCostEstimate");
+			String tripCss = ParamUtil.getString(
+				actionRequest, "tripCss");
 			String tripDescription = ParamUtil.getString(
 				actionRequest, "tripDescription");
 			Date tripEnd = ParamUtil.getDate(actionRequest, "tripEnd", dateFormat);
@@ -571,6 +549,7 @@ public class TODSLPortlet extends MVCPortlet {
 			String tripImage = ParamUtil.getString(actionRequest, "tripImage");
 			String tripLocation = ParamUtil.getString(
 				actionRequest, "tripLocation");
+			String tripPayPalEmail = ParamUtil.getString(actionRequest, "tripPayPalEmail");
 			Date tripStart = ParamUtil.getDate(
 				actionRequest, "tripStart", dateFormat);
 			String tripTitle = ParamUtil.getString(actionRequest, "tripTitle");
@@ -581,11 +560,13 @@ public class TODSLPortlet extends MVCPortlet {
 
 			trip.setTripCapacity(tripCapacity);
 			trip.setTripCostEstimate(tripCostEstimate);
+			trip.setTripCss(tripCss);
 			trip.setTripDescription(tripDescription);
 			trip.setTripEnd(tripEnd);
 			trip.setTripHost(tripHost);
 			trip.setTripImage(tripImage);
 			trip.setTripLocation(tripLocation);
+			trip.setTripPayPalEmail(tripPayPalEmail);
 			trip.setTripStart(tripStart);
 			trip.setTripTitle(tripTitle);
 
@@ -596,6 +577,7 @@ public class TODSLPortlet extends MVCPortlet {
 			trip.setDisplayTripGearGroupItems(displayTripGearGroupItems);
 			trip.setDisplayTripGearLendingItems(displayTripGearLendingItems);
 			trip.setDisplayTripMap(displayTripMap);
+			trip.setDisplayTripPayment(displayTripPayment);
 			trip.setDisplayTripTransportation(displayTripTransportation);
 			trip.setDisplayTripWeather(displayTripWeather);
 

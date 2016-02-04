@@ -35,7 +35,7 @@ TripMember rsvpTripMember = TripMemberLocalServiceUtil.fetchTripMember(tripMembe
 			inviteeName = tripMemberInvitedByUser.getFullName();
 		}
 
-		String redirect = layout.getFriendlyURL() + "/-/trip/" + trip.getTripId();
+		String redirect = baseURL + trip.getTripId();
 		%>
 
 		You have been invited by <%= inviteeName %> on a trip to <%= trip.getTripLocation() %>.
