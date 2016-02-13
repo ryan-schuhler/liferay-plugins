@@ -14,12 +14,8 @@
 		<pattern>/{tripId:\d+}</pattern>
 	</route>
 	<route>
-		<pattern>/{tripId:\d+}/edit</pattern>
-		<implicit-parameter name="mvcPath">/edit.jsp</implicit-parameter>
-	</route>
-	<route>
 		<pattern>/{tripId:\d+}/rsvp/{tripMemberId:\d+}</pattern>
-		<implicit-parameter name="mvcPath">/rsvp.jsp</implicit-parameter>
+		<implicit-parameter name="appName">rsvp</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/{tripId:\d+}/{appName}</pattern>
@@ -28,12 +24,8 @@
 		<pattern>/{tripName}</pattern>
 	</route>
 	<route>
-		<pattern>/{tripName}/edit</pattern>
-		<implicit-parameter name="mvcPath">/edit.jsp</implicit-parameter>
-	</route>
-	<route>
 		<pattern>/{tripName}/rsvp/{tripMemberId:\d+}</pattern>
-		<implicit-parameter name="mvcPath">/rsvp.jsp</implicit-parameter>
+		<implicit-parameter name="appName">rsvp</implicit-parameter>
 	</route>
 	<route>
 		<pattern>/{tripName}/{appName}</pattern>

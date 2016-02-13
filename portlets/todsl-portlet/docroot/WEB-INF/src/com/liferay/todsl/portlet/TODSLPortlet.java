@@ -45,11 +45,13 @@ import com.liferay.todsl.service.TripMemberLocalServiceUtil;
 import com.liferay.todsl.service.TripTransportationLocalServiceUtil;
 import com.liferay.todsl.service.persistence.TripGearGroupItemUtil;
 import com.liferay.todsl.service.persistence.TripTransportationUtil;
+import com.liferay.portal.kernel.util.DateUtil;
 
 import java.text.DateFormat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import javax.mail.internet.InternetAddress;
 
@@ -543,15 +545,15 @@ public class TODSLPortlet extends MVCPortlet {
 				actionRequest, "tripCss");
 			String tripDescription = ParamUtil.getString(
 				actionRequest, "tripDescription");
-			Date tripEnd = ParamUtil.getDate(actionRequest, "tripEnd", dateFormat);
+			String tripEnd = ParamUtil.getString(actionRequest, "tripEnd");
 			String tripHost = ParamUtil.getString(actionRequest, "tripHost");
 			long tripId = ParamUtil.getLong(actionRequest, "tripId");
 			String tripImage = ParamUtil.getString(actionRequest, "tripImage");
 			String tripLocation = ParamUtil.getString(
 				actionRequest, "tripLocation");
-			String tripPayPalEmail = ParamUtil.getString(actionRequest, "tripPayPalEmail");
-			Date tripStart = ParamUtil.getDate(
-				actionRequest, "tripStart", dateFormat);
+			String tripPayPalEmail = ParamUtil.getString(
+				actionRequest, "tripPayPalEmail");
+			String tripStart = ParamUtil.getString(actionRequest, "tripStart");
 			String tripTitle = ParamUtil.getString(actionRequest, "tripTitle");
 
 			Trip trip = TripLocalServiceUtil.getTrip(tripId);
@@ -562,12 +564,12 @@ public class TODSLPortlet extends MVCPortlet {
 			trip.setTripCostEstimate(tripCostEstimate);
 			trip.setTripCss(tripCss);
 			trip.setTripDescription(tripDescription);
-			trip.setTripEnd(tripEnd);
+			trip.setTripEnd(DateUtil.parseDate(tripEnd, actionRequest.getLocale()));
 			trip.setTripHost(tripHost);
 			trip.setTripImage(tripImage);
 			trip.setTripLocation(tripLocation);
 			trip.setTripPayPalEmail(tripPayPalEmail);
-			trip.setTripStart(tripStart);
+			trip.setTripStart(DateUtil.parseDate(tripStart, actionRequest.getLocale()));
 			trip.setTripTitle(tripTitle);
 
 			trip.setDisplayTripCountdown(displayTripCountdown);
