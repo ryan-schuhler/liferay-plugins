@@ -1,0 +1,3 @@
+<h3>Map of <%= trip.getTripLocation() %></h3>
+
+<iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA5sI973WTg3t0tID52UV8A129dnrHkYF0&q=<%= HtmlUtil.escape(trip.getTripLocation()) %>" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>

@@ -1,0 +1,5 @@
+<h3>Weather</h3>
+
+<div align="center">
+	<script src="http://www.weatherforecastmap.com/weather11.php?zona=united-states_<%= HtmlUtil.escape(trip.getTripLocation()) %>"></script>
+</div>

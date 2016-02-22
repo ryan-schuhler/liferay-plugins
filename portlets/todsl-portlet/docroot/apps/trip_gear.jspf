@@ -1,5 +1,3 @@
-<%@ include file="/init.jsp" %>
-
 <h3>What to Bring</h3>
 
 <table>

@@ -1,3 +1,0 @@
-<div class="trip-members">
-	<%@ include file="/widgets/trip_members.jspf" %>
-</div>

@@ -1,3 +1,0 @@
-<h3>Maps</h3>
-
-<p><%= trip.getTripLocation() %></p>

@@ -30,6 +30,7 @@ page import="com.liferay.todsl.service.TripGearLendingItemLocalServiceUtil" %><%
 page import="com.liferay.todsl.service.TripLocalServiceUtil" %><%@
 page import="com.liferay.todsl.service.TripMemberLocalServiceUtil" %><%@
 page import="com.liferay.portal.kernel.util.DateUtil" %><%@
+page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.todsl.service.TripTransportationLocalServiceUtil" %>
 
 <%@ page import="java.text.SimpleDateFormat" %>

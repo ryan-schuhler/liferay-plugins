@@ -1,0 +1,58 @@
+<span class="countdown-timer">
+</span>
+
+<script>
+AUI().ready(
+	'node',
+	function(A) {
+		function CountDownTimer(selector) {
+			var end = new Date('<%= trip.getTripStart() %>');
+
+			var _second = 1000;
+			var _minute = _second * 60;
+			var _hour = _minute * 60;
+			var _day = _hour * 24;
+			var timer;
+
+			function showRemaining() {
+				var now = new Date();
+
+				var distance = end - now;
+
+				if (distance < 0) {
+					clearInterval(timer);
+
+					console.log("Timer Expired");
+
+					return;
+				}
+
+				var days = Math.floor(distance / _day);
+				var hours = Math.floor((distance % _day) / _hour);
+				var minutes = Math.floor((distance % _hour) / _minute);
+				var seconds = Math.floor((distance % _minute) / _second);
+
+				var units = [days, hours, minutes, seconds];
+				var count = 0;
+
+				units.forEach(
+					function(unit) {
+						if (unit < 10) {
+							unit = '0' + unit;
+							units[count] = unit;
+						}
+
+						count++;
+					}
+				);
+
+				A.one(selector).set('innerHTML', '<span>' + units[0] + ':' + '</span><span>' + units[1] + ':' + '</span><span>' + units[2] + ':' + '</span><span>' + units[3] + '</span>');
+			}
+
+			timer = setInterval(showRemaining, 1000);
+		}
+
+		CountDownTimer('.countdown-timer');
+	}
+);
+</script>

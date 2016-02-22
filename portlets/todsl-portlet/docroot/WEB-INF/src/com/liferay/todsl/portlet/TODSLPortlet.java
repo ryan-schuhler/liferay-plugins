@@ -96,6 +96,29 @@ public class TODSLPortlet extends MVCPortlet {
 			trip.setTripTitle(tripTitle);
 
 			TripLocalServiceUtil.addTrip(trip);
+
+			long tripMemberId = CounterLocalServiceUtil.increment(
+					TripMember.class.getName());
+
+			TripMember tripMember = TripMemberLocalServiceUtil.createTripMember(
+					tripMemberId);
+
+			String tripMemberEmail = user.getEmailAddress();
+			String tripMemberName = user.getFullName();
+
+			tripMember.setCreateDate(new Date());
+			tripMember.setModifiedDate(new Date());
+			tripMember.setTripId(tripId);
+			tripMember.setUserId(userId);
+			tripMember.setUserName(user.getFullName());
+
+			tripMember.setTripMemberAdmin(true);
+			tripMember.setTripMemberEmail(tripMemberEmail);
+			tripMember.setTripMemberName(tripMemberName);
+			tripMember.setTripMemberStatus(1);
+			tripMember.setTripMemberUserId(userId);
+
+			TripMemberLocalServiceUtil.addTripMember(tripMember);
 		}
 		catch (Exception e) {
 			SessionErrors.add(actionRequest, "createTripError");
