@@ -30,6 +30,11 @@
 				<portlet:param name="tripMemberStatus" value="3" />
 				<portlet:param name="userId" value="<%= String.valueOf(user.getUserId()) %>" />
 			</portlet:actionURL>
+			<portlet:actionURL name="makeTripMemberAdmin" var="makeTripMemberAdminURL">
+				<portlet:param name="tripMemberId" value="<%= String.valueOf(member.getTripMemberId()) %>" />
+				<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
+				<portlet:param name="tripMemberAdminStatus" value="1" />
+			</portlet:actionURL>
 			<portlet:actionURL name="deleteTripMember" var="deleteTripMemberURL">
 				<portlet:param name="tripMemberId" value="<%= String.valueOf(member.getTripMemberId()) %>" />
 				<portlet:param name="redirect" value="<%= themeDisplay.getURLCurrent() %>" />
@@ -37,16 +42,20 @@
 
 			<tr>
 				<td><%= member.getTripMemberName() %></td>
-				<td>
-					<select onchange="window.location=this.value" style="max-width:100px;">
-						<option value=""></option>
-						<option value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>">RSVP</option>
-						<option value="<%= acceptTripMemberInvitationURL %>">Accept</option>
-						<option value="<%= maybeTripMemberInvitationURL %>">Maybe</option>
-						<option value="<%= declineTripMemberInvitationURL %>">Decline</option>
-						<option value="<%= deleteTripMemberURL %>">Delete</option>
-					</select>
-				</td>
+
+				<c:if test="<%= tripMember.getTripMemberAdmin()%>">
+					<td>
+						<select onchange="window.location=this.value" style="max-width:100px;">
+							<option value=""></option>
+							<option value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>">RSVP</option>
+							<option value="<%= acceptTripMemberInvitationURL %>">Accept</option>
+							<option value="<%= maybeTripMemberInvitationURL %>">Maybe</option>
+							<option value="<%= declineTripMemberInvitationURL %>">Decline</option>
+							<option value="<%= makeTripMemberAdminURL %>">Make Admin</option>
+							<option value="<%= deleteTripMemberURL %>">Delete</option>
+						</select>
+					</td>
+				</c:if>
 			</tr>
 
 			<%
@@ -90,16 +99,19 @@
 
 			<tr>
 				<td><%= member.getTripMemberName() %></td>
-				<td>
-					<select onchange="window.location=this.value" style="max-width:100px;">
-						<option value=""></option>
-						<option value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>">RSVP</option>
-						<option value="<%= acceptTripMemberInvitationURL2 %>">Accept</option>
-						<option value="<%= maybeTripMemberInvitationURL2 %>">Maybe</option>
-						<option value="<%= declineTripMemberInvitationURL2 %>">Decline</option>
-						<option value="<%= deleteTripMemberURL2 %>">Delete</option>
-					</select>
-				</td>
+
+				<c:if test="<%= tripMember.getTripMemberAdmin()%>">
+					<td>
+						<select onchange="window.location=this.value" style="max-width:100px;">
+							<option value=""></option>
+							<option value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>">RSVP</option>
+							<option value="<%= acceptTripMemberInvitationURL2 %>">Accept</option>
+							<option value="<%= maybeTripMemberInvitationURL2 %>">Maybe</option>
+							<option value="<%= declineTripMemberInvitationURL2 %>">Decline</option>
+							<option value="<%= deleteTripMemberURL2 %>">Delete</option>
+						</select>
+					</td>
+				</c:if>
 			</tr>
 
 			<%
@@ -143,16 +155,19 @@
 
 			<tr>
 				<td><%= member.getTripMemberName() %></td>
-				<td>
-					<select onchange="window.location=this.value" style="max-width:100px;">
-						<option value=""></option>
-						<option value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>">RSVP</option>
-						<option value="<%= acceptTripMemberInvitationURL3 %>">Accept</option>
-						<option value="<%= maybeTripMemberInvitationURL3 %>">Maybe</option>
-						<option value="<%= declineTripMemberInvitationURL3 %>">Decline</option>
-						<option value="<%= deleteTripMemberURL3 %>">Delete</option>
-					</select>
-				</td>
+
+				<c:if test="<%= tripMember.getTripMemberAdmin()%>">
+					<td>
+						<select onchange="window.location=this.value" style="max-width:100px;">
+							<option value=""></option>
+							<option value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>">RSVP</option>
+							<option value="<%= acceptTripMemberInvitationURL3 %>">Accept</option>
+							<option value="<%= maybeTripMemberInvitationURL3 %>">Maybe</option>
+							<option value="<%= declineTripMemberInvitationURL3 %>">Decline</option>
+							<option value="<%= deleteTripMemberURL3 %>">Delete</option>
+						</select>
+					</td>
+				</c:if>
 			</tr>
 
 			<%
@@ -196,16 +211,19 @@
 
 			<tr>
 				<td><%= member.getTripMemberName() %></td>
-				<td>
-					<select onchange="window.location=this.value" style="max-width:100px;">
-						<option value=""></option>
-						<option value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>">RSVP</option>
-						<option value="<%= acceptTripMemberInvitationURL4 %>">Accept</option>
-						<option value="<%= maybeTripMemberInvitationURL4 %>">Maybe</option>
-						<option value="<%= declineTripMemberInvitationURL4 %>">Decline</option>
-						<option value="<%= deleteTripMemberURL4 %>">Delete</option>
-					</select>
-				</td>
+
+				<c:if test="<%= tripMember.getTripMemberAdmin()%>">
+					<td>
+						<select onchange="window.location=this.value" style="max-width:100px;">
+							<option value=""></option>
+							<option value="<%= layout.getRegularURL(request) %>/-/trip/<%= trip.getTripId() %>/rsvp/<%= member.getTripMemberId() %>">RSVP</option>
+							<option value="<%= acceptTripMemberInvitationURL4 %>">Accept</option>
+							<option value="<%= maybeTripMemberInvitationURL4 %>">Maybe</option>
+							<option value="<%= declineTripMemberInvitationURL4 %>">Decline</option>
+							<option value="<%= deleteTripMemberURL4 %>">Delete</option>
+						</select>
+					</td>
+				</c:if>
 			</tr>
 
 			<%

@@ -1,6 +1,18 @@
 <%@ include file="/init.jsp" %>
 
 <div class="row-fluid span6">
+	<c:if test="<%= trip.getTripPublic() %>">
+		<div class="open-sign-up">
+			<c:if test="<%= !themeDisplay.isSignedIn()%>">
+				<h3><a href="<%= themeDisplay.getURLSignIn() %>">Sign In</a> to join the trip!</h3>
+			</c:if>
+
+			<c:if test="<%= themeDisplay.isSignedIn() && Validator.isNull(tripMember)%>">
+				<%@ include file="/apps/open_sign_up.jspf" %>
+			</c:if>
+		</div>
+	</c:if>
+
 	<c:if test="<%= Validator.isNotNull(trip.getTripDescription()) %>">
 		<div class="trip-description">
 			<h3>Description</h3>

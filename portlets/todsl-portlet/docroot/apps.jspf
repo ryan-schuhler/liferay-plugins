@@ -23,5 +23,7 @@ String url = baseURL + trip.getTripId();
 		<li <%= Validator.equals(appName, "trip-expenses") ? "class='selected'" : StringPool.BLANK %>><a href="<%= url %>/trip-expenses">Cost</a></li>
 	</c:if>
 
-	<li <%= Validator.equals(appName, "edit") ? "class='selected'" : StringPool.BLANK %>><a href="<%= url %>/edit">Edit Trip</a></li>
+	<c:if test="<%= tripMember.getTripMemberAdmin()%>">
+		<li <%= Validator.equals(appName, "edit") ? "class='selected'" : StringPool.BLANK %>><a href="<%= url %>/edit">Edit Trip</a></li>
+	</c:if>
 </ul>

@@ -32,7 +32,9 @@
 		<column name="tripHost" type="String" />
 		<column name="tripImage" type="String" />
 		<column name="tripLocation" type="String" />
+		<column name="tripLocationWeather" type="String" />
 		<column name="tripPayPalEmail" type="String" />
+		<column name="tripPublic" type="boolean" />
 		<column name="tripStart" type="Date" />
 		<column name="tripTitle" type="String" />
 

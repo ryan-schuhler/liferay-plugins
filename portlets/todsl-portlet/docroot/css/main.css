@@ -21,7 +21,7 @@
 		.display {
 			padding: 1em;
 
-			&.span9, table {
+			&.span9 {
 				margin: 0 auto;
 			}
 

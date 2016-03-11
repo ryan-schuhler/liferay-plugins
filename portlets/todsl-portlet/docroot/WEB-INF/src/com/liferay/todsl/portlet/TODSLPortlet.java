@@ -487,6 +487,77 @@ public class TODSLPortlet extends MVCPortlet {
 			tripTransportationId);
 	}
 
+	public void joinTrip(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long tripMemberId = CounterLocalServiceUtil.increment(
+				TripMember.class.getName());
+
+		TripMember tripMember = TripMemberLocalServiceUtil.createTripMember(
+				tripMemberId);
+
+		String tripMemberEmail = ParamUtil.getString(
+				actionRequest, "tripMemberEmail");
+		String tripMemberName = ParamUtil.getString(
+				actionRequest, "tripMemberName");
+		long tripId = ParamUtil.getLong(actionRequest, "tripId");
+		long userId = PortalUtil.getUserId(actionRequest);
+		User user = UserLocalServiceUtil.getUser(userId);
+
+		tripMember.setCreateDate(new Date());
+		tripMember.setModifiedDate(new Date());
+		tripMember.setTripId(tripId);
+		tripMember.setUserId(userId);
+		tripMember.setUserName(user.getFullName());
+
+		tripMember.setTripMemberEmail(tripMemberEmail);
+		tripMember.setTripMemberName(tripMemberName);
+		tripMember.setTripMemberStatus(1);
+		tripMember.setTripMemberUserId(userId);
+
+		TripMemberLocalServiceUtil.addTripMember(tripMember);
+
+		Trip trip = TripLocalServiceUtil.getTrip(tripId);
+
+		StringBuilder subject = new StringBuilder();
+		subject.append("Trip to ");
+		subject.append(trip.getTripLocation());
+		subject.append("!");
+
+		StringBuilder message = new StringBuilder();
+		message.append("Thanks for joining the trip to ");
+		message.append(trip.getTripLocation());
+		message.append(". Don't forget to check the trip site at <a href='http://theoutdoors.life/web/todsl/home/-/trip/");
+		message.append(tripId);
+		message.append("'>http://theoutdoors.life/web/todsl/home/-/trip/");
+		message.append(tripId);
+		message.append("</a>.");
+
+		sendEmail(tripMemberEmail, subject.toString(), message.toString());
+	}
+
+	public void makeTripMemberAdmin(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+
+		long tripMemberId = ParamUtil.getLong(actionRequest, "tripMemberId");
+		int tripMemberAdminStatus = ParamUtil.getInteger(
+				actionRequest, "tripMemberAdminStatus");
+
+		TripMember tripMember = TripMemberLocalServiceUtil.fetchTripMember(
+				tripMemberId);
+
+		if (tripMemberAdminStatus == 1) {
+			tripMember.setTripMemberAdmin(true);
+		}
+		else {
+			tripMember.setTripMemberAdmin(false);
+		}
+
+		TripMemberLocalServiceUtil.updateTripMember(tripMember);
+	}
+
 	public void respondToTripMemberInvitation(
 			ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -574,8 +645,12 @@ public class TODSLPortlet extends MVCPortlet {
 			String tripImage = ParamUtil.getString(actionRequest, "tripImage");
 			String tripLocation = ParamUtil.getString(
 				actionRequest, "tripLocation");
+			String tripLocationWeather = ParamUtil.getString(
+				actionRequest, "tripLocationWeather");
 			String tripPayPalEmail = ParamUtil.getString(
 				actionRequest, "tripPayPalEmail");
+			boolean tripPublic = ParamUtil.getBoolean(
+				actionRequest, "tripPublic");
 			String tripStart = ParamUtil.getString(actionRequest, "tripStart");
 			String tripTitle = ParamUtil.getString(actionRequest, "tripTitle");
 
@@ -591,7 +666,9 @@ public class TODSLPortlet extends MVCPortlet {
 			trip.setTripHost(tripHost);
 			trip.setTripImage(tripImage);
 			trip.setTripLocation(tripLocation);
+			trip.setTripLocationWeather(tripLocationWeather);
 			trip.setTripPayPalEmail(tripPayPalEmail);
+			trip.setTripPublic(tripPublic);
 			trip.setTripStart(DateUtil.parseDate(tripStart, actionRequest.getLocale()));
 			trip.setTripTitle(tripTitle);
 

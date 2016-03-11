@@ -22,7 +22,7 @@
 	String tripEndDay = DateUtil.getDate(tripEnd, "dd", request.getLocale());
 %>
 
-<c:if test="<%= Validator.isNotNull(tripMember) %>">
+<c:if test="<%= Validator.isNotNull(tripMember) && tripMember.getTripMemberAdmin() %>">
 	<liferay-ui:success key="updateTripSuccess" message="Success! Your new trip id is:" />
 	<liferay-ui:error key="updateTripError" message="Sorry, something went wrong and we couldn't update your trip." />
 
@@ -40,7 +40,6 @@
 		<aui:input name="tripImage" />
 		<aui:input name="tripHost" />
 		<aui:input name="tripDescription" type="textarea" />
-		<aui:input name="tripFriendlyUrl" />
 		<aui:input name="tripCostEstimate" />
 		Start Date
 		<liferay-ui:input-date
@@ -63,8 +62,10 @@
 			yearParam="y2"
 		/>
 		<aui:input name="tripLocation" />
+		<aui:input name="tripLocationWeather" />
 		<aui:input name="tripCapacity" />
 		<aui:input name="tripPayPalEmail" />
+		<aui:input name="tripPublic" />
 
 		<aui:input name="displayTripCountdown" />
 		<aui:input name="displayTripDiscussion" />
